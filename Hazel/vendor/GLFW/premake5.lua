@@ -52,6 +52,7 @@ project "GLFW"
 
 	filter "system:windows"
 		systemversion "latest"
+		staticruntime "On" -- 运行库 /MTd 与 Hazel保持一致 不然找不到函数
 
 		files
 		{
