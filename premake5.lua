@@ -12,7 +12,11 @@ workspace "Hazel"
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"  -- debug-windows-x64
 -- printf("%s\n", outputdir)  --打印输出路径
 
+-- Include directories relative to root folder (solution directory)
+IncludeDir = {}
+IncludeDir["GLFW"] = "Hazel/vendor/GLFW/include"
 
+-- 引入GLFW的premake5文件
 include "Hazel/vendor/GLFW"
 
 project "Hazel"
@@ -36,7 +40,14 @@ project "Hazel"
     includedirs
     {
         "%{prj.name}/vendor/spdlog/include",
-        "%{prj.name}/src"
+        "%{prj.name}/src",
+        "%{IncludeDir.GLFW}"
+    }
+    -- Hazel需要链接的库
+    links
+    {
+        "GLFW",
+        "opengl32.lib"
     }
 
     filter "system:windows"
