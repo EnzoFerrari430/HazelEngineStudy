@@ -49,4 +49,50 @@ namespace Hazel {
 		float m_XOffset, m_YOffset;
 	};
 
+	class MouseButtonEvent : public Event
+	{
+	public:
+		inline int GetMouseButton() const { return m_Button; }
+
+		EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
+	protected:
+		// 不能外部创建
+		MouseButtonEvent(int button)
+			: m_Button(button){}
+
+		int m_Button;
+	};
+
+	class HAZEL_API MouseButtonPressedEvent : public MouseButtonEvent
+	{
+	public:
+		MouseButtonPressedEvent(int button)
+			: MouseButtonEvent(button) {}
+
+		std::string ToString() const override
+		{
+			std::stringstream ss;
+			ss << "MouseButtonPressedEvent: " << m_Button;
+			return ss.str();
+		}
+
+		EVENT_CLASS_TYPE(MouseButtonPressed)
+	};
+
+	class HAZEL_API MouseButtonReleasedEvent : public MouseButtonEvent
+	{
+	public:
+		MouseButtonReleasedEvent(int button)
+			: MouseButtonEvent(button) {}
+
+		std::string ToString() const override
+		{
+			std::stringstream ss;
+			ss << "MouseButtonReleasedEvent: " << m_Button;
+			return ss.str();
+		}
+
+		EVENT_CLASS_TYPE(MouseButtonReleased)
+	};
+
 }
