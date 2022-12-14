@@ -15,9 +15,11 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"  -- debug-window
 -- Include directories relative to root folder (solution directory)
 IncludeDir = {}
 IncludeDir["GLFW"] = "Hazel/vendor/GLFW/include"
+IncludeDir["Glad"] = "Hazel/vendor/Glad/include"
 
 -- 引入GLFW的premake5文件
 include "Hazel/vendor/GLFW"
+include "Hazel/vendor/Glad"
 
 project "Hazel"
     location "Hazel"
@@ -41,12 +43,14 @@ project "Hazel"
     {
         "%{prj.name}/vendor/spdlog/include",
         "%{prj.name}/src",
-        "%{IncludeDir.GLFW}"
+        "%{IncludeDir.GLFW}",
+        "%{IncludeDir.Glad}"
     }
     -- Hazel需要链接的库
     links
     {
         "GLFW",
+        "Glad",
         "opengl32.lib"
     }
 
@@ -58,7 +62,9 @@ project "Hazel"
         defines
         {
             "HZ_PLATFORM_WINDOWS",
-            "HZ_BUILD_DLL"
+            "HZ_BUILD_DLL",
+            "GLFW_INCLUDE_NONE", --glfw不包含gl头文件，让glad去包含gl头文件
+            "HZ_ENABLE_ASSERTS"
         }
 
         postbuildcommands --项目属性里的生成后事件
