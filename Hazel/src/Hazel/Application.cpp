@@ -19,6 +19,16 @@ namespace Hazel {
 	{
 	}
 
+	void Application::PushLayer(Layer* layer)
+	{
+		m_Layerstack.PushLayer(layer);
+	}
+
+	void Application::PushOverlay(Layer* layer)
+	{
+		m_Layerstack.PushOverlay(layer);
+	}
+
 	//事件集中调度
 	void Application::OnEvent(Event& event)
 	{
@@ -26,6 +36,14 @@ namespace Hazel {
 		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
 
 		HZ_CORE_INFO("{0}", event);
+
+		//事件处理，从后往前
+		for (auto it = m_Layerstack.end(); it != m_Layerstack.begin();)
+		{
+			(*--it)->OnEvent(event);
+			if (event.Handled)
+				break;
+		}
 	}
 
 	/*
@@ -41,6 +59,11 @@ namespace Hazel {
 		{
 			glClearColor(1.0f, 0.0f, 1.0f, 0.33f);
 			glClear(GL_COLOR_BUFFER_BIT);
+			
+			//图像渲染 从前往后
+			for (Layer* layer : m_Layerstack)
+				layer->OnUpdate();
+
 			m_Window->OnUpdate();
 		}
 	}
