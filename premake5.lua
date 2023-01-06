@@ -1,6 +1,6 @@
 workspace "Hazel"
     architecture "x86_64"  --64位架构
-	startproject "Sandbox"
+    startproject "Sandbox"
 
     configurations
     {
@@ -67,28 +67,27 @@ project "Hazel"
         {
             "HZ_PLATFORM_WINDOWS",
             "HZ_BUILD_DLL",
-            "GLFW_INCLUDE_NONE", --glfw不包含gl头文件，让glad去包含gl头文件
-            "HZ_ENABLE_ASSERTS"
+            "GLFW_INCLUDE_NONE" --glfw不包含gl头文件，让glad去包含gl头文件
         }
 
         postbuildcommands --项目属性里的生成后事件
         {
-            ("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Sandbox")
+            ("{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputdir .. "/Sandbox/\"")
         }
 
     filter "configurations:Debug"
         defines "HZ_DEBUG"
-        buildoptions "/MDd"
+        runtime "Debug"
         symbols "On"
 
     filter "configurations:Release"
         defines "HZ_RELEASE"
-        buildoptions "/MD"
+        runtime "Release"
         optimize "On"
 
     filter "configurations:Dist"
         defines "HZ_DIST"
-        buildoptions "/MD"
+        runtime "Release"
         optimize "On"
 
 
@@ -130,12 +129,15 @@ project "Sandbox"
 
     filter "configurations:Debug"
         defines "HZ_DEBUG"
+        runtime "Debug"
         symbols "On"
 
     filter "configurations:Release"
         defines "HZ_RELEASE"
+        runtime "Release"
         optimize "On"
 
     filter "configurations:Dist"
         defines "HZ_DIST"
+        runtime "Release"
         optimize "On"
