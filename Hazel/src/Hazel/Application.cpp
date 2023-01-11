@@ -5,7 +5,7 @@
 
 #include <glad/glad.h>
 
-#include "Hazel/Input.h"
+#include "Hazel/Input.h" 
 
 namespace Hazel {
 
@@ -44,7 +44,7 @@ namespace Hazel {
         EventDispatcher dispatcher(event);
         dispatcher.Dispatch<WindowCloseEvent>(HZ_BIND_EVENT_FN(Application::OnWindowClose));
 
-        HZ_CORE_INFO("{0}", event);
+        //HZ_CORE_INFO("{0}", event);
 
         //事件处理，从后往前
         for (auto it = m_Layerstack.end(); it != m_Layerstack.begin();)
@@ -73,8 +73,6 @@ namespace Hazel {
             for (Layer* layer : m_Layerstack)
                 layer->OnUpdate();
             
-            auto[x, y] = Input::GetMousePosition();
-            HZ_CORE_TRACE("{0}, {1}", x, y);
             m_Window->OnUpdate();
         }
     }
