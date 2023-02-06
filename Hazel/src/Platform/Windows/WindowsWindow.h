@@ -3,42 +3,45 @@
 #include "Hazel/Window.h"
 #include "GLFW/glfw3.h"
 
+#include "Hazel/Renderer/GraphicsContext.h"
+
 namespace Hazel {
 
-	class WindowsWindow : public Window
-	{
-	public:
-		WindowsWindow(const WindowProps& props);
-		virtual ~WindowsWindow();
+    class WindowsWindow : public Window
+    {
+    public:
+        WindowsWindow(const WindowProps& props);
+        virtual ~WindowsWindow();
 
-		// 用于更新GLFW的swapbuffer 	glfwPollEvents
-		void OnUpdate() override;
+        // 用于更新GLFW的swapbuffer     glfwPollEvents
+        void OnUpdate() override;
 
-		inline unsigned int GetWidth() const override { return m_Data.Width; }
-		inline unsigned int GetHeight() const override { return m_Data.Height; }
+        inline unsigned int GetWidth() const override { return m_Data.Width; }
+        inline unsigned int GetHeight() const override { return m_Data.Height; }
 
-		// Window attributes
-		inline void SetEventCallback(const EventCallbackFn& callback) override { m_Data.EventCallback = callback; }
-		void SetVSync(bool enabled) override;
-		bool IsVSync() const override;
+        // Window attributes
+        inline void SetEventCallback(const EventCallbackFn& callback) override { m_Data.EventCallback = callback; }
+        void SetVSync(bool enabled) override;
+        bool IsVSync() const override;
 
-		virtual void* GetNativeWindow() const { return m_Window; }
-	private:
-		virtual void Init(const WindowProps& props);
-		virtual void Shutdown();
-	private:
-		GLFWwindow* m_Window;
+        virtual void* GetNativeWindow() const { return m_Window; }
+    private:
+        virtual void Init(const WindowProps& props);
+        virtual void Shutdown();
+    private:
+        GLFWwindow* m_Window;
+        GraphicsContext* m_Context;
 
-		struct WindowData
-		{
-			std::string Title;
-			unsigned int Width, Height;
-			bool VSync;
+        struct WindowData
+        {
+            std::string Title;
+            unsigned int Width, Height;
+            bool VSync;
 
-			EventCallbackFn EventCallback;
-		};
+            EventCallbackFn EventCallback;
+        };
 
-		WindowData m_Data;
-	};
+        WindowData m_Data;
+    };
 
 }
