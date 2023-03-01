@@ -2,6 +2,8 @@
 
 #include <string>
 
+#include <glm/glm.hpp>
+
 namespace Hazel {
 
     // 这里不用抽象， 因为可以对shader进行翻译， 翻译成其他API的shader语言
@@ -13,6 +15,8 @@ namespace Hazel {
 
         void Bind() const;
         void Unbind() const;
+
+        void UploadUniformMat4(const std::string& name, const glm::mat4& matrix);
 
     private:
         uint32_t m_RendererID;
