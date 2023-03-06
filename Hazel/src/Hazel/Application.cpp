@@ -5,12 +5,13 @@
 
 #include "Hazel/Input.h" 
 
+#include "Hazel/Log.h"
+
 namespace Hazel {
 
     Application* Application::s_Instance = nullptr;
 
     Application::Application()
-        : m_Camera(-1.6f, 1.6f, -0.9f, 0.9f, -1.0f, 1.0f)
     {
         HZ_CORE_ASSERT(!s_Instance, "Application already exists!");
         s_Instance = this;
@@ -20,115 +21,6 @@ namespace Hazel {
 
         m_ImGuiLayer = new ImGuiLayer();
         PushOverlay(m_ImGuiLayer);
-
-        m_VertexArray.reset(VertexArray::Create());
-        float vertices[3 * 7] = {
-            -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
-             0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
-             0.0f,  0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f
-        };
-        std::shared_ptr<VertexBuffer> vertexBuffer;
-        vertexBuffer.reset(VertexBuffer::Create(vertices, sizeof(vertices)));
-        BufferLayout layout = {
-            {ShaderDataType::Float3, "a_Position", false},
-            {ShaderDataType::Float4, "a_Color", false}
-        };
-        vertexBuffer->SetLayout(layout);
-        m_VertexArray->AddVertexBuffer(vertexBuffer);
-
-        std::shared_ptr<IndexBuffer> indexBuffer;
-        uint32_t indices[3] = { 0, 1, 2 };
-        indexBuffer.reset(IndexBuffer::Create(indices, sizeof(indices)/sizeof(uint32_t)));
-        m_VertexArray->SetIndexBuffer(indexBuffer);
-
-        std::string vertexSrc = R"(
-            #version 330 core
-
-            layout(location = 0) in vec3 a_Position;
-            layout(location = 1) in vec4 a_Color;
-
-            uniform mat4 u_ViewProjection;
-
-            out vec3 v_Position;
-            out vec4 v_Color;
-
-            void main()
-            {
-                v_Position = a_Position;
-                v_Color = a_Color;
-                gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
-            }
-        )";
-
-        std::string fragmentSrc = R"(
-            #version 330 core
-
-            in vec4 v_Color;
-            in vec3 v_Position;
-            out vec4 color;
-
-            void main()
-            {
-                color = vec4(v_Position * 0.5 + 0.5, 1.0);
-                color = v_Color;
-            }
-        )";
-
-        m_Shader.reset(new Shader(vertexSrc, fragmentSrc));
-
-
-
-
-
-        m_BlueVertexArray.reset(VertexArray::Create());
-        float blueVertices[3 * 4] = {
-            -0.75f, -0.75f, 0.0f,
-             0.75f, -0.75f, 0.0f,
-             0.75f,  0.75f, 0.0f,
-            -0.75f,  0.75f, 0.0f
-        };
-        std::shared_ptr<VertexBuffer> blueVertexBuffer;
-        blueVertexBuffer.reset(VertexBuffer::Create(blueVertices, sizeof(blueVertices)));
-        BufferLayout blueLayout = {
-            {ShaderDataType::Float3, "a_Position", false}
-        };
-        blueVertexBuffer->SetLayout(blueLayout);
-        m_BlueVertexArray->AddVertexBuffer(blueVertexBuffer);
-
-        uint32_t blueIndices[6] = { 0, 1, 2, 2, 3, 0 };
-        std::shared_ptr<IndexBuffer> blueIndexBuffer;
-        blueIndexBuffer.reset(IndexBuffer::Create(blueIndices, sizeof(blueIndices) / sizeof(uint32_t)));
-        m_BlueVertexArray->SetIndexBuffer(blueIndexBuffer);
-
-        std::string blueVertexSrc = R"(
-            #version 330 core
-
-            layout(location = 0) in vec3 a_Position;
-
-            uniform mat4 u_ViewProjection;
-
-            out vec3 v_Position;
-
-            void main()
-            {
-                v_Position = a_Position;
-                gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
-            }
-        )";
-
-        std::string blueFragmentSrc = R"(
-            #version 330 core
-
-            in vec3 v_Position;
-            out vec4 color;
-
-            void main()
-            {
-                color = vec4(0.2, 0.3, 0.8, 1.0);
-            }
-        )";
-
-        m_BlueShader.reset(new Shader(blueVertexSrc, blueFragmentSrc));
     }
     
     Application::~Application()
@@ -158,7 +50,9 @@ namespace Hazel {
         //事件处理，从后往前
         for (auto it = m_Layerstack.end(); it != m_Layerstack.begin();)
         {
-            (*--it)->OnEvent(event);
+            auto itor = --it;
+            HZ_CORE_INFO("{0} Layer Name: {1}", __FUNCTION__, (*itor)->GetName());
+            (*itor)->OnEvent(event);
             if (event.Handled)
                 break;
         }
@@ -175,18 +69,6 @@ namespace Hazel {
     {
         while (m_Running)
         {
-            RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
-            RenderCommand::Clear();
-
-
-            //m_Camera.SetPosition(glm::vec3(0.5f, 0.5f, 0.0f));
-            m_Camera.SetRotation(90.0f);
-
-            Renderer::BeginScene(m_Camera);
-            Renderer::Submit(m_BlueShader, m_BlueVertexArray);
-            Renderer::Submit(m_Shader, m_VertexArray);
-            Renderer::EndScene();
-            
             //图像渲染 从前往后
             for (Layer* layer : m_Layerstack)
                 layer->OnUpdate();
