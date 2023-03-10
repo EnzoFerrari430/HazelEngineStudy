@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Hazel/Core.h"
+#include "Hazel/Core/Timestep.h"
 #include "Hazel/Events/Event.h"
 
 #include "Hazel/Log.h"
@@ -15,11 +16,9 @@ namespace Hazel {
 
         virtual void OnAttach() {}
         virtual void OnDetach() {}
-        virtual void OnUpdate() {}
+        virtual void OnUpdate(Timestep ts) {}
         virtual void OnImGuiRender() {}
-        virtual void OnEvent(Event& event) {
-            HZ_CORE_INFO("{0} EventType: {1}", __FUNCTION__, event.GetName());
-        }
+        virtual void OnEvent(Event& event) {}
 
         inline const std::string& GetName() const { return m_DebugName; }
     protected:

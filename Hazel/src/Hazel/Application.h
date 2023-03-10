@@ -8,6 +8,8 @@
 
 #include "Hazel/ImGui/ImGuiLayer.h"
 
+#include "Hazel/Core/Timestep.h"
+
 
 namespace Hazel {
     
@@ -35,7 +37,7 @@ namespace Hazel {
         ImGuiLayer* m_ImGuiLayer;
         bool m_Running = true;
         LayerStack m_Layerstack;
-
+        float m_LastFrameTime = 0.0f;
     private:
         static Application* s_Instance;
     };
