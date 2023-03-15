@@ -6,7 +6,7 @@
 
 namespace Hazel {
 
-    // ÕâÀï²»ÓÃ³éÏó£¬ ÒòÎª¿ÉÒÔ¶Ôshader½øĞĞ·­Òë£¬ ·­Òë³ÉÆäËûAPIµÄshaderÓïÑÔ
+    // è¿™é‡Œä¸ç”¨æŠ½è±¡ï¼Œ å› ä¸ºå¯ä»¥å¯¹shaderè¿›è¡Œç¿»è¯‘ï¼Œ ç¿»è¯‘æˆå…¶ä»–APIçš„shaderè¯­è¨€
     class Shader
     {
     public:
@@ -16,6 +16,7 @@ namespace Hazel {
         void Bind() const;
         void Unbind() const;
 
+        void UploadUniformFloat4(const std::string& name, const glm::vec4& values);
         void UploadUniformMat4(const std::string& name, const glm::mat4& matrix);
 
     private:

@@ -5,8 +5,8 @@
 #include "OrthographicCamera.h"
 
 /*
-Renderer调用RenderCommand
-RenderCommand调用具体的RendererAPI
+Renderer璋冪敤RenderCommand
+RenderCommand璋冪敤鍏蜂綋鐨凴endererAPI
 */
 namespace Hazel {
 

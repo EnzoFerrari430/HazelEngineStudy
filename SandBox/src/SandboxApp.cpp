@@ -8,7 +8,7 @@ class ExampleLayer : public Hazel::Layer
 public:
     ExampleLayer()
         : Layer("Example"), m_Camera(-1.6f, 1.6f, -0.9f, 0.9f, -1.0f, 1.0f)
-        , m_CameraPosition(0.0f), m_SquarePosition(0.0f)
+        , m_CameraPosition(0.0f), m_SquarePosition(0.3f, 0.3f, 0.0f)
     {
         m_VertexArray.reset(Hazel::VertexArray::Create());
         float vertices[3 * 7] = {
@@ -70,27 +70,27 @@ public:
 
 
 
-        m_BlueVertexArray.reset(Hazel::VertexArray::Create());
-        float blueVertices[3 * 4] = {
+        m_FlatColorVertexArray.reset(Hazel::VertexArray::Create());
+        float flatColorVertices[10 * 4] = {
             -0.5f, -0.5f, 0.0f,
              0.5f, -0.5f, 0.0f,
              0.5f,  0.5f, 0.0f,
             -0.5f,  0.5f, 0.0f
         };
-        std::shared_ptr<Hazel::VertexBuffer> blueVertexBuffer;
-        blueVertexBuffer.reset(Hazel::VertexBuffer::Create(blueVertices, sizeof(blueVertices)));
-        Hazel::BufferLayout blueLayout = {
-            {Hazel::ShaderDataType::Float3, "a_Position", false}
+        std::shared_ptr<Hazel::VertexBuffer> flatColorVertexBuffer;
+        flatColorVertexBuffer.reset(Hazel::VertexBuffer::Create(flatColorVertices, sizeof(flatColorVertices)));
+        Hazel::BufferLayout flatColorLayout = {
+            {Hazel::ShaderDataType::Float3, "a_Position", false},
         };
-        blueVertexBuffer->SetLayout(blueLayout);
-        m_BlueVertexArray->AddVertexBuffer(blueVertexBuffer);
+        flatColorVertexBuffer->SetLayout(flatColorLayout);
+        m_FlatColorVertexArray->AddVertexBuffer(flatColorVertexBuffer);
 
-        uint32_t blueIndices[6] = { 0, 1, 2, 2, 3, 0 };
-        std::shared_ptr<Hazel::IndexBuffer> blueIndexBuffer;
-        blueIndexBuffer.reset(Hazel::IndexBuffer::Create(blueIndices, sizeof(blueIndices) / sizeof(uint32_t)));
-        m_BlueVertexArray->SetIndexBuffer(blueIndexBuffer);
+        uint32_t flatColorIndices[6] = { 0, 1, 2, 2, 3, 0 };
+        std::shared_ptr<Hazel::IndexBuffer> flatColorIndexBuffer;
+        flatColorIndexBuffer.reset(Hazel::IndexBuffer::Create(flatColorIndices, sizeof(flatColorIndices) / sizeof(uint32_t)));
+        m_FlatColorVertexArray->SetIndexBuffer(flatColorIndexBuffer);
 
-        std::string blueVertexSrc = R"(
+        std::string flatColorShaderVertexSrc = R"(
             #version 330 core
 
             layout(location = 0) in vec3 a_Position;
@@ -107,24 +107,25 @@ public:
             }
         )";
 
-        std::string blueFragmentSrc = R"(
+        std::string flatColorShaderFragmentSrc = R"(
             #version 330 core
 
             in vec3 v_Position;
             out vec4 color;
+            uniform vec4 u_Color;
 
             void main()
             {
-                color = vec4(0.2, 0.3, 0.8, 1.0);
+                color = u_Color;
             }
         )";
 
-        m_BlueShader.reset(new Hazel::Shader(blueVertexSrc, blueFragmentSrc));
+        m_FlatColorShader.reset(new Hazel::Shader(flatColorShaderVertexSrc, flatColorShaderFragmentSrc));
     }
 
     void OnUpdate(Hazel::Timestep ts) override
     {
-        HZ_TRACE("Delta time: {0}s ({1}ms)", ts.GetSeconds(), ts.GetMilliseconds());
+        //HZ_TRACE("Delta time: {0}s ({1}ms)", ts.GetSeconds(), ts.GetsMilliseconds());
 
         if (Hazel::Input::IsKeyPressed(HZ_KEY_LEFT))
             m_CameraPosition.x -= m_CameraMoveSpeed * ts;
@@ -161,17 +162,29 @@ public:
         m_Camera.SetRotation(m_CameraRotation);
 
         Hazel::Renderer::BeginScene(m_Camera);
+        
+        glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
-        for (int y = 0; y < 20; ++y) {
-            for (int x = 0; x < 20; ++x) {
+        glm::vec4 redColor(0.8f, 0.2f, 0.3f, 1.0f);
+        glm::vec4 blueColor(0.2f, 0.3f, 0.8f, 1.0f);
+
+
+        m_FlatColorShader->Bind();//ÂÖàÁªëÂÆöÔºåÂê¶Âàô(x = 0, y = 0)ÊñπÂùóÂú®Á¨¨‰∏ÄÂ∏ßÊó∂ËÆæÁΩÆuniformÂ§±Ë¥•
+        for (int y = 0; y < 20; ++y)
+        {
+            for (int x = 0; x < 20; ++x)
+            {
                 glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
-                glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
-                glm::mat4 transform = glm::translate(glm::mat4(1.0f), m_SquarePosition + pos) * scale; //æÿ’Û”“≥À£¨“ª∞„œ»Àı∑≈£¨‘Ÿ–˝◊™£¨◊Ó∫ÛŒª“∆
-                Hazel::Renderer::Submit(m_BlueShader, m_BlueVertexArray, transform);
+                glm::mat4 transform = glm::translate(glm::mat4(1.0f), m_SquarePosition + pos) * scale; //Áü©ÈòµÂè≥‰πòÔºå‰∏ÄËà¨ÂÖàÁº©ÊîæÔºåÂÜçÊóãËΩ¨ÔºåÊúÄÂêé‰ΩçÁßª
+                if (x % 2 == 0)
+                    m_FlatColorShader->UploadUniformFloat4("u_Color", redColor);
+                else
+                    m_FlatColorShader->UploadUniformFloat4("u_Color", blueColor);
+                Hazel::Renderer::Submit(m_FlatColorShader, m_FlatColorVertexArray, transform);
             }
         }
-
         Hazel::Renderer::Submit(m_Shader, m_VertexArray);
+
         Hazel::Renderer::EndScene();
 
     }
@@ -185,8 +198,8 @@ private:
     std::shared_ptr<Hazel::Shader> m_Shader;
     std::shared_ptr<Hazel::VertexArray> m_VertexArray;
 
-    std::shared_ptr<Hazel::Shader> m_BlueShader;
-    std::shared_ptr<Hazel::VertexArray> m_BlueVertexArray;
+    std::shared_ptr<Hazel::Shader> m_FlatColorShader;
+    std::shared_ptr<Hazel::VertexArray> m_FlatColorVertexArray;
 
     Hazel::OrthographicCamera m_Camera;
     glm::vec3 m_CameraPosition;
