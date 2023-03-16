@@ -21,7 +21,7 @@ public:
              0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
              0.0f,  0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f
         };
-        std::shared_ptr<Hazel::VertexBuffer> vertexBuffer;
+        Hazel::Ref<Hazel::VertexBuffer> vertexBuffer;
         vertexBuffer.reset(Hazel::VertexBuffer::Create(vertices, sizeof(vertices)));
         Hazel::BufferLayout layout = {
             {Hazel::ShaderDataType::Float3, "a_Position", false},
@@ -30,7 +30,7 @@ public:
         vertexBuffer->SetLayout(layout);
         m_VertexArray->AddVertexBuffer(vertexBuffer);
 
-        std::shared_ptr<Hazel::IndexBuffer> indexBuffer;
+        Hazel::Ref<Hazel::IndexBuffer> indexBuffer;
         uint32_t indices[3] = { 0, 1, 2 };
         indexBuffer.reset(Hazel::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
         m_VertexArray->SetIndexBuffer(indexBuffer);
@@ -82,7 +82,7 @@ public:
              0.5f,  0.5f, 0.0f,
             -0.5f,  0.5f, 0.0f
         };
-        std::shared_ptr<Hazel::VertexBuffer> flatColorVertexBuffer;
+        Hazel::Ref<Hazel::VertexBuffer> flatColorVertexBuffer;
         flatColorVertexBuffer.reset(Hazel::VertexBuffer::Create(flatColorVertices, sizeof(flatColorVertices)));
         Hazel::BufferLayout flatColorLayout = {
             {Hazel::ShaderDataType::Float3, "a_Position", false},
@@ -91,7 +91,7 @@ public:
         m_FlatColorVertexArray->AddVertexBuffer(flatColorVertexBuffer);
 
         uint32_t flatColorIndices[6] = { 0, 1, 2, 2, 3, 0 };
-        std::shared_ptr<Hazel::IndexBuffer> flatColorIndexBuffer;
+        Hazel::Ref<Hazel::IndexBuffer> flatColorIndexBuffer;
         flatColorIndexBuffer.reset(Hazel::IndexBuffer::Create(flatColorIndices, sizeof(flatColorIndices) / sizeof(uint32_t)));
         m_FlatColorVertexArray->SetIndexBuffer(flatColorIndexBuffer);
 
@@ -199,11 +199,11 @@ public:
     }
 
 private:
-    std::shared_ptr<Hazel::Shader> m_Shader;
-    std::shared_ptr<Hazel::VertexArray> m_VertexArray;
+    Hazel::Ref<Hazel::Shader> m_Shader;
+    Hazel::Ref<Hazel::VertexArray> m_VertexArray;
 
-    std::shared_ptr<Hazel::Shader> m_FlatColorShader;
-    std::shared_ptr<Hazel::VertexArray> m_FlatColorVertexArray;
+    Hazel::Ref<Hazel::Shader> m_FlatColorShader;
+    Hazel::Ref<Hazel::VertexArray> m_FlatColorVertexArray;
 
     Hazel::OrthographicCamera m_Camera;
     glm::vec3 m_CameraPosition;
