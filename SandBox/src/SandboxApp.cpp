@@ -231,7 +231,7 @@ public:
         }
 
         m_TextureShader->Bind();
-        m_Texture->Bind();
+        m_Texture->Bind(); //不用每一帧都绑定一下，静态贴图绑定一次就好了
         Hazel::Renderer::Submit(m_TextureShader, m_FlatColorVertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
         // Triangle

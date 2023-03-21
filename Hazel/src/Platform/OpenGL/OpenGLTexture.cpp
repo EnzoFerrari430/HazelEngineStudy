@@ -18,20 +18,16 @@ namespace Hazel {
         m_Height = height;
 
         glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
-        //glTextureStorage2D(m_RendererID, 1, GL_RGBA, m_Width, m_Height);
-
-        //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-        ////根据上面stbi_load得到的channels值 设置是GL_RGB还是GL_RGBA
-        //glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Width, m_Height, GL_RGBA, GL_UNSIGNED_BYTE, data);
+        glTextureStorage2D(m_RendererID, 1, GL_RGBA8, m_Width, m_Height);
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_Width, m_Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-        glBindTexture(GL_TEXTURE_2D, 0);//解绑
+
+        //根据上面stbi_load得到的channels值 设置是GL_RGB还是GL_RGBA
+        glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Width, m_Height, GL_RGBA, GL_UNSIGNED_BYTE, data);
 
         stbi_image_free(data);
     }
@@ -43,7 +39,7 @@ namespace Hazel {
 
     void OpenGLTexture2D::Bind(uint32_t slot) const
     {
-        glBindTexture(slot, m_RendererID);
+        glBindTextureUnit(slot, m_RendererID);
     }
 
 }
