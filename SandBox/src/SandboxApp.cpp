@@ -166,6 +166,7 @@ public:
 
         m_TextureShader.reset(Hazel::Shader::Create(textureShaderVertexSrc, textureShaderFragmentSrc));
 
+        m_BoxTexture = Hazel::Texture2D::Create("assets/textures/container.jpg");
         m_Texture = Hazel::Texture2D::Create("assets/textures/awesomeface.png");
 
         std::dynamic_pointer_cast<Hazel::OpenGLShader>(m_TextureShader)->Bind();
@@ -231,6 +232,9 @@ public:
         }
 
         m_TextureShader->Bind();
+
+        m_BoxTexture->Bind();
+        Hazel::Renderer::Submit(m_TextureShader, m_FlatColorVertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
         m_Texture->Bind(); //不用每一帧都绑定一下，静态贴图绑定一次就好了
         Hazel::Renderer::Submit(m_TextureShader, m_FlatColorVertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
@@ -256,6 +260,7 @@ private:
     Hazel::Ref<Hazel::VertexArray> m_FlatColorVertexArray;
 
     Hazel::Ref<Hazel::Texture2D> m_Texture;
+    Hazel::Ref<Hazel::Texture2D> m_BoxTexture;
 
     Hazel::OrthographicCamera m_Camera;
     glm::vec3 m_CameraPosition;
