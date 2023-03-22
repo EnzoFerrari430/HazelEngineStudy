@@ -1,0 +1,13 @@
+1. 在P39Material System章节中提到一提交渲染的方法。
+根据Material种类的不同 一次提交多个相同Material的对象进行渲染
+
+类似代码如下：
+Hazel::MaterialRef material = new Hazel::Material(m_FlatColorShader);
+Hazel::MaterialInstanceRef mi = new Hazel::MaterialInstance(material);
+//MaterialInstanceRef继承自MaterialRef，但是有自己特定的数据，用于渲染某些特定的模型
+
+mi->Set("u_Color", redColor);  //在material中设置uniform
+squareMesh->SetMaterial(mi);
+
+//在Renderer::Submit中
+MaterialInstanceRef::Bind();// 从而绑定Shader

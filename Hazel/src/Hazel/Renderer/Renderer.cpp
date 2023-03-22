@@ -7,6 +7,11 @@ namespace Hazel {
 
     Renderer::SceneData* Renderer::m_SceneData = new Renderer::SceneData;
 
+    void Renderer::Init()
+    {
+        RenderCommand::Init();
+    }
+
     void Renderer::BeginScene(OrthographicCamera& camera)
     {
         m_SceneData->ViewProjectionMatrix = camera.GetViewProjectionMatrix();
@@ -16,13 +21,13 @@ namespace Hazel {
     {
     }
 
-    void Renderer::Submit(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& vertexArray, const glm::mat4& transform)
+    void Renderer::Submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertexArray, const glm::mat4& transform)
     {
         shader->Bind();
 
-        // TODO: ÕâÀïÔİÊ±Ö»Ê¹ÓÃOpenGL, ºóÆÚ³éÏóÒª¿¼ÂÇÆäËûÍ¼ĞÎ½Ó¿Ú DirectX VulcanµÈ
-        std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformMat4("u_ViewProjection", m_SceneData->ViewProjectionMatrix);  //Õâ¸öÃ¿Ò»Ö¡Ã¿Ò»¸öshaderÖ»ÓÃÉèÖÃÒ»´Î Ó¦¸Ã·ÅÔÚÈ«¾Ö±äÁ¿ÖĞ
-        std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformMat4("u_Transform", transform);  //Ã¿¸öÄ£ĞÍ¶¼ÒªÉèÖÃÒ»´Î
+        // TODO: è¿™é‡Œæš‚æ—¶åªä½¿ç”¨OpenGL, åæœŸæŠ½è±¡è¦è€ƒè™‘å…¶ä»–å›¾å½¢æ¥å£ DirectX Vulcanç­‰
+        std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformMat4("u_ViewProjection", m_SceneData->ViewProjectionMatrix);  //è¿™ä¸ªæ¯ä¸€å¸§æ¯ä¸€ä¸ªshaderåªç”¨è®¾ç½®ä¸€æ¬¡ åº”è¯¥æ”¾åœ¨å…¨å±€å˜é‡ä¸­
+        std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformMat4("u_Transform", transform);  //æ¯ä¸ªæ¨¡å‹éƒ½è¦è®¾ç½®ä¸€æ¬¡
 
         vertexArray->Bind();
         RenderCommand::DrawIndexed(vertexArray);
