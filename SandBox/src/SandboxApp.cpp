@@ -156,7 +156,7 @@ public:
             layout(location = 0) out vec4 color;
             in vec2 v_TexCoord;
 
-            uniform sampler2D u_Texture;
+            uniform sampler2D u_Texture;//默认是0
 
             void main()
             {
@@ -232,7 +232,6 @@ public:
         }
 
         m_TextureShader->Bind();
-
         m_BoxTexture->Bind();
         Hazel::Renderer::Submit(m_TextureShader, m_FlatColorVertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
         m_Texture->Bind(); //不用每一帧都绑定一下，静态贴图绑定一次就好了

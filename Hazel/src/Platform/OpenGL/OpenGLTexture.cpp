@@ -53,7 +53,7 @@ namespace Hazel {
 
     void OpenGLTexture2D::Bind(uint32_t slot) const
     {
-        glBindTextureUnit(slot, m_RendererID);
+        glBindTextureUnit(slot, m_RendererID); //全局的纹理单元
     }
 
 }
