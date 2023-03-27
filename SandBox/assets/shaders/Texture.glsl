@@ -22,7 +22,7 @@ void main()
 layout(location = 0) out vec4 color;
 in vec2 v_TexCoord;
 
-uniform sampler2D u_Texture;//默认是0
+uniform sampler2D u_Texture;//default value: 0
 
 void main()
 {

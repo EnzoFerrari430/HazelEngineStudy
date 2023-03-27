@@ -39,19 +39,8 @@ namespace Hazel {
 
     std::string OpenGLShader::ReadFile(const std::string& filepath)
     {
-        /*
-        第三个参数用于 文件打开保护
-        #define _SH_DENYRW      0x10    // deny read/write mode
-        #define _SH_DENYWR      0x20    // deny write mode
-        #define _SH_DENYRD      0x30    // deny read mode
-        #define _SH_DENYNO      0x40    // deny none mode
-        #define _SH_SECURE      0x80    // secure mode
-
-        std::ios::binary值为0x20,恰好是写保护
-
-        */
         std::string result;
-        std::ifstream in(filepath, std::ios::in, std::ios::binary);
+        std::ifstream in(filepath, std::ios::in | std::ios::binary);
         if (in)
         {
             in.seekg(0, std::ios::end);
@@ -83,7 +72,7 @@ namespace Hazel {
 
             size_t nextLinePos = source.find_first_not_of("\r\n", eol);
             pos = source.find(typeToken, nextLinePos);
-            shaderSources[ShaderTypeFromString(type)] = source.substr(nextLinePos, pos - (nextLinePos == std::string::npos ? source.size() - 1 : nextLinePos));
+            shaderSources[ShaderTypeFromString(type)] = (pos == std::string::npos) ? source.substr(nextLinePos) : source.substr(nextLinePos, pos - nextLinePos); // Fix PreProcess Funtion Bugs
         }
         return shaderSources;
     }
@@ -91,7 +80,9 @@ namespace Hazel {
     void OpenGLShader::Compile(const std::unordered_map<GLenum, std::string>& shaderSources)
     {
         GLuint program = glCreateProgram();
-        std::vector<GLenum> glShaderIDs(shaderSources.size());
+        HZ_CORE_ASSERT(shaderSources.size() <= 2, "We only support 2 shaders for now!");
+        std::array<GLenum, 2> glShaderIDs;
+        int glShaderIDIndex = 0;
         for (auto&[type, source] : shaderSources)
         {
             GLuint shader = glCreateShader(type);
@@ -119,7 +110,7 @@ namespace Hazel {
             }
 
             glAttachShader(program, shader);
-            glShaderIDs.push_back(shader);
+            glShaderIDs[glShaderIDIndex++] = shader;
         }
 
         // Link our program
