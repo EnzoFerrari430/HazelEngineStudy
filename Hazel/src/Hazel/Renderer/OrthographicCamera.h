@@ -9,7 +9,7 @@ namespace Hazel {
     public:
         OrthographicCamera(float left, float right, float bottom, float top, float zNear, float zFar);
 
-        void SetProjection(float left, float right, float bottom, float top, float zNear, float zFar);//proj
+        void SetProjection(float left, float right, float bottom, float top, float zNear = -1.0f, float zFar = 1.0f);//proj
 
         void SetPosition(const glm::vec3& position);
         const glm::vec3& GetPosition() const { return m_Position; }
