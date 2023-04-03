@@ -43,13 +43,14 @@ namespace Hazel {
         layer->OnAttach();
     }
 
-    //ÊÂ¼þ¼¯ÖÐµ÷¶È
+    //äº‹ä»¶é›†ä¸­è°ƒåº¦
     void Application::OnEvent(Event& event)
     {
         EventDispatcher dispatcher(event);
         dispatcher.Dispatch<WindowCloseEvent>(HZ_BIND_EVENT_FN(Application::OnWindowClose));
+        dispatcher.Dispatch<WindowResizeEvent>(HZ_BIND_EVENT_FN(Application::OnWindowResize));
 
-        //ÊÂ¼þ´¦Àí£¬´ÓºóÍùÇ°
+        //äº‹ä»¶å¤„ç†ï¼Œä»ŽåŽå¾€å‰
         for (auto it = m_Layerstack.end(); it != m_Layerstack.begin();)
         {
             (*--it)->OnEvent(event);
@@ -60,10 +61,10 @@ namespace Hazel {
 
     /*
     TODO:
-    ÕâÀïÒª¶ÔÂß¼­ºÍäÖÈ¾½øÐÐÇø·Ö
+    è¿™é‡Œè¦å¯¹é€»è¾‘å’Œæ¸²æŸ“è¿›è¡ŒåŒºåˆ†
     OnLogical
     OnRender
-    Á½¸ö²½Öè
+    ä¸¤ä¸ªæ­¥éª¤
     */
     void Application::Run()
     {
@@ -73,9 +74,12 @@ namespace Hazel {
             Timestep timestep = time - m_LastFrameTime;
             m_LastFrameTime = time;
 
-            //Í¼ÏñäÖÈ¾ ´ÓÇ°Íùºó
-            for (Layer* layer : m_Layerstack)
+            //å›¾åƒæ¸²æŸ“ ä»Žå‰å¾€åŽ
+            if (!m_Minimized)
+            {
+                for (Layer* layer : m_Layerstack)
                 layer->OnUpdate(timestep);
+            }
 
             m_ImGuiLayer->Begin();
             for (Layer* layer : m_Layerstack)
@@ -90,6 +94,20 @@ namespace Hazel {
     {
         m_Running = false;
         return true;
+    }
+
+    bool Application::OnWindowResize(WindowResizeEvent& e)
+    {
+        if (e.GetWidth() == 0 || e.GetHeight() == 0)
+        {
+            m_Minimized = true;
+            return false;
+        }
+
+        m_Minimized = false;
+        Renderer::OnWindowResize(e.GetWidth(), e.GetHeight());
+
+        return false;
     }
 
 }

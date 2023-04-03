@@ -22,7 +22,7 @@ namespace Hazel {
         bool OnMouseScrolled(MouseScrolledEvent& e);
         bool OnWindowResized(WindowResizeEvent& e);
     private:
-        float m_AspecRatio;
+        float m_AspectRatio;
         float m_ZoomLevel = 1.0f;
         OrthographicCamera m_Camera;
 

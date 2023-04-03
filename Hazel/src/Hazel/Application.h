@@ -14,7 +14,7 @@
 namespace Hazel {
     
     /*
-        Application用于收集事件(event)，并转发给layer
+        Application鐢ㄤ簬鏀堕泦浜嬩欢(event)锛屽苟杞彂缁檒ayer
     */
     class HAZEL_API Application
     {
@@ -32,10 +32,12 @@ namespace Hazel {
         inline Window& GetWindow() { return *m_Window; }
     private:
         bool OnWindowClose(WindowCloseEvent& e);
+        bool OnWindowResize(WindowResizeEvent& e);
     private:
         std::unique_ptr<Window> m_Window;
         ImGuiLayer* m_ImGuiLayer;
         bool m_Running = true;
+        bool m_Minimized = false;
         LayerStack m_Layerstack;
         float m_LastFrameTime = 0.0f;
     private:
