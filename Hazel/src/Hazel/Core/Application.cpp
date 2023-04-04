@@ -3,9 +3,9 @@
 
 #include "Hazel/Renderer/Renderer.h"
 
-#include "Hazel/Input.h" 
+#include "Hazel/Core/Input.h" 
 
-#include "Hazel/Log.h"
+#include "Hazel/Core/Log.h"
 
 #include <GLFW/glfw3.h>
 

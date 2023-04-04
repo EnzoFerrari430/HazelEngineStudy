@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Hazel/Window.h"
+#include "Hazel/Core/Window.h"
 #include <GLFW/glfw3.h>
 
 #include "Hazel/Renderer/GraphicsContext.h"
@@ -13,7 +13,7 @@ namespace Hazel {
         WindowsWindow(const WindowProps& props);
         virtual ~WindowsWindow();
 
-        // 用于更新GLFW的swapbuffer     glfwPollEvents
+        // 鐢ㄤ簬鏇存柊GLFW鐨剆wapbuffer     glfwPollEvents
         void OnUpdate() override;
 
         inline unsigned int GetWidth() const override { return m_Data.Width; }

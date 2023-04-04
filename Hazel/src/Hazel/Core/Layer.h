@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Hazel/Core.h"
+#include "Hazel/Core/Core.h"
 #include "Hazel/Core/Timestep.h"
 #include "Hazel/Events/Event.h"
 
-#include "Hazel/Log.h"
+#include "Hazel/Core/Log.h"
 
 namespace Hazel {
 

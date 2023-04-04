@@ -1,17 +1,17 @@
 #pragma once
 
-#include "Hazel/Core.h"
-#include "Hazel/Layer.h"
+#include "Hazel/Core/Core.h"
+#include "Hazel/Core/Layer.h"
 
 #include <vector>
 
 namespace Hazel {
 
     /*
-    Í¼²ãStack
-    Èí¼ş½çÃæäÖÈ¾·Ö²ã½øĞĞ ´ÓÇ°Íùºó ½çÃæäÖÈ¾
-    Èí¼şÊÂ¼ş´¦Àí·Ö²ã½øĞĞ ´ÓºóÍùÇ° ÊÂ¼ş´¦Àí
-    Á½¸öÊÇÏà·´µÄË³Ğò,¶¥²ã×îºóäÖÈ¾£¬×îÏÈ´¦ÀíÊÂ¼ş
+    å›¾å±‚Stack
+    è½¯ä»¶ç•Œé¢æ¸²æŸ“åˆ†å±‚è¿›è¡Œ ä»å‰å¾€å ç•Œé¢æ¸²æŸ“
+    è½¯ä»¶äº‹ä»¶å¤„ç†åˆ†å±‚è¿›è¡Œ ä»åå¾€å‰ äº‹ä»¶å¤„ç†
+    ä¸¤ä¸ªæ˜¯ç›¸åçš„é¡ºåº,é¡¶å±‚æœ€åæ¸²æŸ“ï¼Œæœ€å…ˆå¤„ç†äº‹ä»¶
     */
     class HAZEL_API LayerStack
     {
@@ -27,7 +27,7 @@ namespace Hazel {
         std::vector<Layer*>::iterator begin() { return m_Layers.begin(); }
         std::vector<Layer*>::iterator end() { return m_Layers.end(); }
     private:
-        //ÊÂ¼ş´¦ÀíĞèÒª·´Ïòµü´úÆ÷  ½çÃæäÖÈ¾ĞèÒªÕıÏòµü´úÆ÷
+        //äº‹ä»¶å¤„ç†éœ€è¦åå‘è¿­ä»£å™¨  ç•Œé¢æ¸²æŸ“éœ€è¦æ­£å‘è¿­ä»£å™¨
         std::vector<Layer*> m_Layers;
         unsigned int m_LayerInsertIndex = 0;
     };

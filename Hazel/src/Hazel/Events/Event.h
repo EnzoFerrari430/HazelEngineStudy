@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Hazel/Core.h"
+#include "Hazel/Core/Core.h"
 #include "hzpch.h"
 
 namespace Hazel {
@@ -19,7 +19,7 @@ namespace Hazel {
 		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
 	};
 
-	//¶ÔÊÂ¼ş½øĞĞ·ÖÀà£¬ ÓÃÓÚ¹ıÂË
+	//å¯¹äº‹ä»¶è¿›è¡Œåˆ†ç±»ï¼Œ ç”¨äºè¿‡æ»¤
 	enum EventCategory
 	{
 		None = 0,
@@ -40,7 +40,7 @@ namespace Hazel {
 	{
 		friend class EventDispatcher;
 	public:
-		bool Handled = false;  //ÊÇ·ñ±»´¦Àí
+		bool Handled = false;  //æ˜¯å¦è¢«å¤„ç†
 
 		virtual EventType GetEventType() const = 0;
 		virtual const char* GetName() const = 0;
@@ -80,7 +80,7 @@ namespace Hazel {
 	// fmt/ostream.h provides std::ostream support including formatting of user-defined types that have an overloaded 
 	// insertion operator (operator<<).In order to make a type formattable via std::ostream you should provide a formatter 
 	// specialization inherited from ostream_formatter :
-	// ÓÃÓÚspdlogÊä³ö×Ô¶¨ÒåµÄÊÂ¼şĞÅÏ¢
+	// ç”¨äºspdlogè¾“å‡ºè‡ªå®šä¹‰çš„äº‹ä»¶ä¿¡æ¯
 	inline std::ostream& operator<<(std::ostream& os, const Event& e)
 	{
 		return os << e.ToString();
