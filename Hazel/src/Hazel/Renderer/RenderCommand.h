@@ -26,6 +26,11 @@ namespace Hazel {
             s_RendererAPI->Clear(); 
         }
 
+        inline static void ScreenShot(const char* filename)
+        {
+            s_RendererAPI->ScreenShot(filename);
+        }
+
         inline static void DrawIndexed(const Ref<VertexArray>& vertexArray) 
         {
             s_RendererAPI->DrawIndexed(vertexArray); 

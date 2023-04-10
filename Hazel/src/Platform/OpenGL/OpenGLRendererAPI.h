@@ -15,6 +15,8 @@ namespace Hazel {
 
         virtual void DrawIndexed(const Ref<VertexArray>& vertexArray) override;
 
+        virtual void ScreenShot(const char* filename) override;
+
     };
 
 }
