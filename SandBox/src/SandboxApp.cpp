@@ -1,4 +1,5 @@
 #include <Hazel.h>
+#include <Hazel/Core/EntryPoint.h>
 
 #include "Platform/OpenGL/OpenGLShader.h"
 
@@ -6,6 +7,8 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
+#include "Sandbox2D.h"
 
 
 class ExampleLayer : public Hazel::Layer
@@ -15,14 +18,14 @@ public:
         : Layer("Example"), m_CameraController(1280.0f / 720.0f, true)
         , m_SquarePosition(0.3f, 0.3f, 0.0f)
     {
-        m_VertexArray.reset(Hazel::VertexArray::Create());
+        m_VertexArray = Hazel::VertexArray::Create();
         float vertices[3 * 7] = {
             -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
              0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
              0.0f,  0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f
         };
         Hazel::Ref<Hazel::VertexBuffer> vertexBuffer;
-        vertexBuffer.reset(Hazel::VertexBuffer::Create(vertices, sizeof(vertices)));
+        vertexBuffer = Hazel::VertexBuffer::Create(vertices, sizeof(vertices));
         Hazel::BufferLayout layout = {
             {Hazel::ShaderDataType::Float3, "a_Position", false},
             {Hazel::ShaderDataType::Float4, "a_Color", false}
@@ -32,7 +35,7 @@ public:
 
         Hazel::Ref<Hazel::IndexBuffer> indexBuffer;
         uint32_t indices[3] = { 0, 1, 2 };
-        indexBuffer.reset(Hazel::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
+        indexBuffer = Hazel::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t));
         m_VertexArray->SetIndexBuffer(indexBuffer);
 
         std::string vertexSrc = R"(
@@ -75,7 +78,7 @@ public:
 
 
 
-        m_FlatColorVertexArray.reset(Hazel::VertexArray::Create());
+        m_FlatColorVertexArray = Hazel::VertexArray::Create();
         float flatColorVertices[5 * 4] = {
             -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
              0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
@@ -83,7 +86,7 @@ public:
             -0.5f,  0.5f, 0.0f, 0.0f, 1.0f
         };
         Hazel::Ref<Hazel::VertexBuffer> flatColorVertexBuffer;
-        flatColorVertexBuffer.reset(Hazel::VertexBuffer::Create(flatColorVertices, sizeof(flatColorVertices)));
+        flatColorVertexBuffer = Hazel::VertexBuffer::Create(flatColorVertices, sizeof(flatColorVertices));
         Hazel::BufferLayout flatColorLayout = {
             {Hazel::ShaderDataType::Float3, "a_Position", false},
             {Hazel::ShaderDataType::Float2, "a_TexCoord", false},
@@ -93,7 +96,7 @@ public:
 
         uint32_t flatColorIndices[6] = { 0, 1, 2, 2, 3, 0 };
         Hazel::Ref<Hazel::IndexBuffer> flatColorIndexBuffer;
-        flatColorIndexBuffer.reset(Hazel::IndexBuffer::Create(flatColorIndices, sizeof(flatColorIndices) / sizeof(uint32_t)));
+        flatColorIndexBuffer = Hazel::IndexBuffer::Create(flatColorIndices, sizeof(flatColorIndices) / sizeof(uint32_t));
         m_FlatColorVertexArray->SetIndexBuffer(flatColorIndexBuffer);
 
         std::string flatColorShaderVertexSrc = R"(
@@ -225,7 +228,8 @@ class SandBox : public Hazel::Application
 public:
     SandBox()
     {
-        PushLayer(new ExampleLayer());
+        //PushLayer(new ExampleLayer());
+        PushLayer(new Sandbox2D());
     }
 
     ~SandBox()
