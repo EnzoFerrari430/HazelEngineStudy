@@ -26,6 +26,7 @@ namespace Hazel {
             s_RendererAPI->Clear(); 
         }
 
+        // 自己函数 - 截图功能
         inline static void ScreenShot(const char* filename)
         {
             s_RendererAPI->ScreenShot(filename);
