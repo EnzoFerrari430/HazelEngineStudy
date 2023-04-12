@@ -1,8 +1,6 @@
 #include <Hazel.h>
 #include <Hazel/Core/EntryPoint.h>
 
-#include "Platform/OpenGL/OpenGLShader.h"
-
 #include <ImGui/imgui.h>
 
 #include <glm/gtc/matrix_transform.hpp>
@@ -136,8 +134,8 @@ public:
         m_BoxTexture = Hazel::Texture2D::Create("assets/textures/container.jpg");
         m_Texture = Hazel::Texture2D::Create("assets/textures/awesomeface.png");
 
-        std::dynamic_pointer_cast<Hazel::OpenGLShader>(textureShader)->Bind();
-        std::dynamic_pointer_cast<Hazel::OpenGLShader>(textureShader)->UploadUniformInt("u_Texture", 0);
+        textureShader->Bind();
+        textureShader->SetInt("u_Texture", 0);
     }
 
     void OnUpdate(Hazel::Timestep ts) override
@@ -165,8 +163,8 @@ public:
         glm::vec4 redColor(0.8f, 0.2f, 0.3f, 1.0f);
         glm::vec4 blueColor(0.2f, 0.3f, 0.8f, 1.0f);
 
-        std::dynamic_pointer_cast<Hazel::OpenGLShader>(m_FlatColorShader)->Bind();//先绑定，否则(x = 0, y = 0)方块在第一帧时设置uniform失败
-        std::dynamic_pointer_cast<Hazel::OpenGLShader>(m_FlatColorShader)->UploadUniformFloat3("u_Color", m_SquareColor);
+        m_FlatColorShader->Bind();//先绑定，否则(x = 0, y = 0)方块在第一帧时设置uniform失败
+        m_FlatColorShader->SetFloat3("u_Color", m_SquareColor);
 
         for (int y = 0; y < 20; ++y)
         {
