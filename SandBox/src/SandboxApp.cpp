@@ -194,7 +194,7 @@ public:
     void OnImGuiRender() override
     {
         ImGui::Begin("Settings");
-        ImGui::ColorEdit3("Square Color", glm::value_ptr(m_SquareColor));
+        ImGui::ColorEdit3("Square Color1", glm::value_ptr(m_SquareColor));
         ImGui::End();
     }
 
@@ -226,7 +226,7 @@ class SandBox : public Hazel::Application
 public:
     SandBox()
     {
-        //PushLayer(new ExampleLayer());
+        PushLayer(new ExampleLayer());
         PushLayer(new Sandbox2D());
     }
 
