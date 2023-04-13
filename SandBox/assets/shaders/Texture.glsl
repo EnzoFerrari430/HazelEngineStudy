@@ -26,5 +26,5 @@ uniform sampler2D u_Texture;//default value: 0
 
 void main()
 {
-    color = texture(u_Texture, v_TexCoord);
+    color = texture(u_Texture, v_TexCoord * 10.0f) * vec4(v_TexCoord.r, v_TexCoord.g, 0.0f, 1.0f);
 }

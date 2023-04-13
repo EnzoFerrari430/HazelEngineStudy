@@ -226,7 +226,7 @@ class SandBox : public Hazel::Application
 public:
     SandBox()
     {
-        PushLayer(new ExampleLayer());
+        //PushLayer(new ExampleLayer());
         PushLayer(new Sandbox2D());
     }
 
