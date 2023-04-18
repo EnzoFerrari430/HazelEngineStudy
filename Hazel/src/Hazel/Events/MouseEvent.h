@@ -3,6 +3,8 @@
 #include "Event.h"
 #include "hzpch.h"
 
+#include "Hazel/Core/MouseCodes.h"
+
 namespace Hazel {
 
     class HAZEL_API MouseMovedEvent : public Event
@@ -52,21 +54,21 @@ namespace Hazel {
     class MouseButtonEvent : public Event
     {
     public:
-        inline int GetMouseButton() const { return m_Button; }
+        inline MouseCode GetMouseButton() const { return m_Button; }
 
         EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
     protected:
         // 不能外部创建
-        MouseButtonEvent(int button)
+        MouseButtonEvent(MouseCode button)
             : m_Button(button){}
 
-        int m_Button;
+        MouseCode m_Button;
     };
 
     class HAZEL_API MouseButtonPressedEvent : public MouseButtonEvent
     {
     public:
-        MouseButtonPressedEvent(int button)
+        MouseButtonPressedEvent(MouseCode button)
             : MouseButtonEvent(button) {}
 
         std::string ToString() const override
@@ -82,7 +84,7 @@ namespace Hazel {
     class HAZEL_API MouseButtonReleasedEvent : public MouseButtonEvent
     {
     public:
-        MouseButtonReleasedEvent(int button)
+        MouseButtonReleasedEvent(MouseCode button)
             : MouseButtonEvent(button) {}
 
         std::string ToString() const override
