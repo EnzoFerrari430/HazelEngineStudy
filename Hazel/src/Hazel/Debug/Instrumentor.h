@@ -77,7 +77,7 @@ namespace Hazel {
             std::replace(name.begin(), name.end(), '"', '\'');
 
             json << std::setprecision(3) << std::fixed; // 设置浮点数的有效数字为n位
-            json << "{";
+            json << ",{";
             json << "\"cat\":\"function\",";
             json << "\"dur\":" << (result.ElapsedTime.count()) << ',';
             json << "\"name\":\"" << name << "\",";
@@ -158,7 +158,7 @@ namespace Hazel {
     };
 }
 
-#define HZ_PROFILE 0
+#define HZ_PROFILE 1
 #if HZ_PROFILE
     // Resolve which function signature macro will be used. Note that this only
     // is resolved when the (pre)compiler starts, so the syntax highlighting
