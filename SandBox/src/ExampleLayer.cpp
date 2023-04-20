@@ -133,6 +133,8 @@ ExampleLayer::ExampleLayer()
 
 void ExampleLayer::OnAttach()
 {
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    io.Fonts->AddFontFromFileTTF("res/fonts/msyh.ttc", 18.0f, nullptr, io.Fonts->GetGlyphRangesChineseFull());
 }
 
 void ExampleLayer::OnDetach()
@@ -199,6 +201,9 @@ void ExampleLayer::OnImGuiRender()
     ImGui::Begin("Settings");
     ImGui::ColorEdit3("Square Color1", glm::value_ptr(m_SquareColor));
     ImGui::End();
+
+    static bool show = true;
+    ImGui::ShowDemoWindow(&show);
 }
 
 void ExampleLayer::OnEvent(Hazel::Event& e)
