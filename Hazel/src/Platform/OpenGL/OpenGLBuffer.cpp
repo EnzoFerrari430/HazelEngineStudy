@@ -8,6 +8,15 @@ namespace Hazel {
     ///////////////////////////////////////////////////////////////////////
     // VertexBuffer ///////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////
+    OpenGLVertexBuffer::OpenGLVertexBuffer(uint32_t size)
+    {
+        HZ_PROFILE_FUNCTION();
+
+        glCreateBuffers(1, &m_RendererID);
+        glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
+        glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_STATIC_DRAW);
+    }
+
     OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, uint32_t size)
     {
         HZ_PROFILE_FUNCTION();
@@ -36,6 +45,16 @@ namespace Hazel {
         HZ_PROFILE_FUNCTION();
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
+    }
+
+    void OpenGLVertexBuffer::SetData(const void * data, uint32_t size)
+    {
+        // To my understanding, glBufferSubData should always be faster then glBufferData 
+        // because glBufferData reallocs the memory each time called, thus if your size doesn’t change,
+        // use glBufferSubData otherwise use glBufferData.
+        // What I have found is that glBufferSubData runs about 68 % the speed of only using glBufferData.
+        glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);  // 速度快 不用重新申请内存
     }
 
     ///////////////////////////////////////////////////////////////////////
