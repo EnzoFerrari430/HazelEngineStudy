@@ -24,6 +24,10 @@ namespace Hazel {
         HZ_CORE_INFO("  Vendor: {0}", (const char*)glGetString(GL_VENDOR));
         HZ_CORE_INFO("  Renderer: {0}", (const char*)glGetString(GL_RENDERER));
         HZ_CORE_INFO("  Version: {0}", (const char*)glGetString(GL_VERSION));
+
+        int texture_units = 0;
+        glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &texture_units);
+        HZ_CORE_INFO("  TextureSlots Limit: {0}", texture_units);
     }
 
     void OpenGLContext::SwapBuffers()
