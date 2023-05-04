@@ -7,7 +7,7 @@
 namespace Hazel {
 
 
-
+    // TODO: 正交相机的近平面 远平面需要调大， Z轴0.1的深度 在GPU可能会显示有误
     OrthographicCameraController::OrthographicCameraController(float aspectRatio, bool rotation)
         : m_AspectRatio(aspectRatio), m_Camera(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel, -1.0f, 1.0f), m_Rotation(rotation)
     {
