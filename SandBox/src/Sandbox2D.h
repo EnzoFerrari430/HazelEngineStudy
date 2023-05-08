@@ -2,6 +2,8 @@
 
 #include <Hazel.h>
 
+#include "ParticleSystem.h"
+
 template<typename Fn>
 class Timer
 {
@@ -59,6 +61,9 @@ private:
     Hazel::Ref<Hazel::Texture2D> m_BoxTexture;
 
     glm::vec4 m_SquareColor = { 0.2f, 0.3f, 0.8f, 1.0f };
+
+    ParticleProps m_Particle;
+    ParticleSystem m_ParticleSystem;
 
     // benckmark
     struct ProfileResult
