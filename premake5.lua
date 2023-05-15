@@ -9,6 +9,11 @@ workspace "Hazel"
         "Dist"
     }
 
+    flags
+    {
+        "MultiProcessorCompile"
+    }
+
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"  -- debug-windows-x64
 -- printf("%s\n", outputdir)  --打印输出路径
 
@@ -54,7 +59,8 @@ project "Hazel"
 
     defines
     {
-        "_CRT_SECURE_NO_WARNINGS"
+        "_CRT_SECURE_NO_WARNINGS",
+        "GLFW_INCLUDE_NONE" --glfw不包含gl头文件，让glad去包含gl头文件
     }
 
     includedirs
@@ -83,7 +89,6 @@ project "Hazel"
         {
             "HZ_PLATFORM_WINDOWS",
             "HZ_BUILD_DLL",
-            "GLFW_INCLUDE_NONE" --glfw不包含gl头文件，让glad去包含gl头文件
         }
 
     filter "configurations:Debug"
