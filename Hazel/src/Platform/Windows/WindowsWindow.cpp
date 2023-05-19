@@ -55,6 +55,11 @@ namespace Hazel {
         return m_Data.VSync;
     }
 
+    void WindowsWindow::SetWindowTitle(const char* title) const
+    {
+        glfwSetWindowTitle((GLFWwindow*)GetNativeWindow(), title);
+    }
+
     void WindowsWindow::Init(const WindowProps& props)
     {
         HZ_PROFILE_FUNCTION();

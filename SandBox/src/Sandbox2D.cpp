@@ -92,12 +92,14 @@ void Sandbox2D::OnUpdate(Hazel::Timestep ts)
             m_ParticleSystem.Emit(m_Particle);
     }
 
+    static float rotation = 0.0f;
+    rotation += ts * 20.0f;
     Hazel::Renderer2D::BeginScene(m_CameraController.GetCamera());
     float spriteSheetWidth = m_SpriteSheet->GetWidth();
     float spriteSheetHeight = m_SpriteSheet->GetHeight();
     glm::vec2 aspect = { 1.0f, spriteSheetWidth / spriteSheetHeight };
     Hazel::Renderer2D::DrawQuad({ 0.0f, 0.0f, 0.0f }, glm::vec2(1.0f, 1.0f) * aspect, m_SpriteSheet);
-    Hazel::Renderer2D::DrawRotatedQuad({ 1.0f, 0.0f, 0.0f }, glm::vec2(1.0f, 1.0f), glm::radians(30.0f), m_TexturePuzzle);
+    Hazel::Renderer2D::DrawRotatedQuad({ 1.0f, 0.0f, 0.4f }, glm::vec2(1.0f, 1.0f), glm::radians(rotation), m_TexturePuzzle);
     Hazel::Renderer2D::EndScene();
 
     m_ParticleSystem.OnUpdate(ts);
