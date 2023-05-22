@@ -44,6 +44,7 @@ namespace Hazel {
         virtual void* GetNativeWindow() const = 0;
 
         virtual void SetWindowTitle(const char* title) const = 0;
+        virtual void SetWindowSize(int width, int height) const = 0;
 
         static Scope<Window> Window::Create(const WindowProps& props = WindowProps());
     };

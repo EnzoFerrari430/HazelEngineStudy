@@ -57,7 +57,13 @@ namespace Hazel {
 
     void WindowsWindow::SetWindowTitle(const char* title) const
     {
-        glfwSetWindowTitle((GLFWwindow*)GetNativeWindow(), title);
+        glfwSetWindowTitle(m_Window, title);
+    }
+
+    void WindowsWindow::SetWindowSize(int width, int height) const
+    {
+
+        glfwSetWindowSize(m_Window, width, height);
     }
 
     void WindowsWindow::Init(const WindowProps& props)

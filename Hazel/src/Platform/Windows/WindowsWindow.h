@@ -27,6 +27,8 @@ namespace Hazel {
         void* GetNativeWindow() const override { return m_Window; }
 
         void SetWindowTitle(const char* title) const override;
+
+        void SetWindowSize(int width, int height) const override;
     private:
         virtual void Init(const WindowProps& props);
         virtual void Shutdown();

@@ -10,6 +10,7 @@ public:
     {
         PushLayer(new TetrisLayer());
         Get().GetWindow().SetWindowTitle("Tetris");
+        Get().GetWindow().SetWindowSize(640, 960);
     }
 
     ~SandBox()
