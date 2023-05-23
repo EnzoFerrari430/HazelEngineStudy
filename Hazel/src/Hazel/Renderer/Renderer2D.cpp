@@ -29,6 +29,7 @@ namespace Hazel {
         Ref<VertexBuffer> QuadVertexBuffer;
         Ref<VertexArray> QuadVertexArray;
         Ref<Shader> TextureShader;
+        Ref<Shader> DarkLightShader;
         Ref<Texture2D> WhiteTexture;
 
         uint32_t QuadIndexCount = 0;
@@ -91,7 +92,8 @@ namespace Hazel {
         int32_t samplers[s_Data.MaxTextureSlots];
         for (uint32_t i = 0; i < s_Data.MaxTextureSlots; ++i)
             samplers[i] = i;
-        
+
+        s_Data.DarkLightShader = Shader::Create("assets/shaders/DarkLight.glsl");
         s_Data.TextureShader = Shader::Create("assets/shaders/Texture.glsl");
         s_Data.TextureShader->Bind();
         s_Data.TextureShader->SetIntArray("u_Textures", samplers, s_Data.MaxTextureSlots);

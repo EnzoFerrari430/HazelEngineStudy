@@ -61,7 +61,6 @@ private:
 private:
     Hazel::OrthographicCamera m_Camera;
     Hazel::Ref<Hazel::Shader> m_TetrisShader;
-    Hazel::Ref<Hazel::VertexArray> m_TetrisVertexArray;
     Hazel::Ref<Hazel::Texture2D> m_TilesTexture;
     Hazel::Ref<Hazel::Texture2D> m_FrameTexture;
     Hazel::Ref<Hazel::Texture2D> m_BackgroundTexture;
@@ -79,7 +78,7 @@ private:
     {
         Play = 0, MainMenu = 1, GameOver = 2
     };
-    GameState m_State = GameState::MainMenu;
+    GameState m_State = GameState::Play;
 
     // benckmark
     struct ProfileResult

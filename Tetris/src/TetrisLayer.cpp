@@ -20,14 +20,7 @@ void TetrisLayer::OnAttach()
     m_Font = io.Fonts->AddFontFromFileTTF("assets/fonts/OpenSans-Regular.ttf", 120.0f);
     m_SettingFont = io.Fonts->AddFontFromFileTTF("assets/fonts/OpenSans-Regular.ttf", 20.0f);
 
-    m_TilesTexture = Hazel::Texture2D::Create("assets/textures/tiles.png");
-    m_FrameTexture = Hazel::Texture2D::Create("assets/textures/frame.png");
-    m_BackgroundTexture = Hazel::Texture2D::Create("assets/textures/background.png");
-
-    for (size_t i = 0; i < m_Tiles.size(); ++i)
-    {
-        m_Tiles[i] = Hazel::SubTexture2D::CreateFromCoords(m_TilesTexture, { i * 18.0f, 0.0f }, { 18.0f, 18.0f });
-    }
+    m_Level.Init();
 }
 
 void TetrisLayer::OnDetach()
@@ -67,21 +60,24 @@ void TetrisLayer::OnUpdate(Hazel::Timestep ts)
 
         // äÖÈ¾±³¾°
         Hazel::Renderer2D::BeginScene(m_Camera);
-        Hazel::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.5f }, { 2.0f, 3.0f }, m_BackgroundTexture);
+        //Hazel::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.5f }, { 2.0f, 3.0f }, m_BackgroundTexture);
+        m_Level.OnRendererBackGround();
         Hazel::Renderer2D::EndScene();
 
         // äÖÈ¾·½¿é
         Hazel::Renderer2D::BeginScene(m_Camera);
+        //float size = 18.0f * 4.0f / 640.0f;
         //for (size_t i = 0; i < m_Tiles.size(); ++i)
         //{
-        //    Hazel::Renderer2D::DrawQuad({ -1.0f + i * 0.25f, 0.0f }, { 0.2f, 0.2f }, m_Tiles[i]);
+        //    Hazel::Renderer2D::DrawQuad({ -1.0f + i * size, 0.0f }, { size, size }, m_Tiles[i]);
         //}
         m_Level.OnRenderer();
         Hazel::Renderer2D::EndScene();
 
         // äÖÈ¾Ç°¾°
         Hazel::Renderer2D::BeginScene(m_Camera);
-        Hazel::Renderer2D::DrawQuad({ 0.0f, 0.0f, 0.5f }, { 2.0f, 3.0f }, m_FrameTexture);
+        //Hazel::Renderer2D::DrawQuad({ 0.0f, 0.0f, 0.5f }, { 2.0f, 3.0f }, m_FrameTexture);
+        m_Level.OnRendererForeGround();
         Hazel::Renderer2D::EndScene();
     }
 
@@ -94,9 +90,14 @@ void TetrisLayer::OnImGuiRender()
     {
         case GameState::Play:
         {
-            uint32_t playerScore = m_Level.GetPlayer().GetScore();
+            uint32_t playerScore = 100;
             std::string scoreStr = std::string("Score: ") + std::to_string(playerScore);
-            ImGui::GetForegroundDrawList()->AddText(m_Font, 48.0f, ImGui::GetWindowPos(), 0xffffffff, scoreStr.c_str());
+            auto pos = ImGui::GetWindowPos();
+            auto width = Hazel::Application::Get().GetWindow().GetWidth();
+            auto height = Hazel::Application::Get().GetWindow().GetHeight();
+            pos.x += width * 0.5f - 300.0f;
+            pos.y -= 90.0f;
+            ImGui::GetForegroundDrawList()->AddText(m_Font, 48.0f, pos, 0xffff00ff, scoreStr.c_str());
             break;
         }
         case GameState::MainMenu:
@@ -113,6 +114,19 @@ void TetrisLayer::OnImGuiRender()
         }
         case GameState::GameOver:
         {
+            auto pos = ImGui::GetWindowPos();
+            auto width = Hazel::Application::Get().GetWindow().GetWidth();
+            auto height = Hazel::Application::Get().GetWindow().GetHeight();
+            pos.x += width * 0.5f - 300.0f;
+            pos.y += 50.0f;
+            if (m_Blink)
+                ImGui::GetForegroundDrawList()->AddText(m_Font, 120.0f, pos, 0xffffffff, "Click to Play!");
+
+            pos.x += 200.0f;
+            pos.y += 150.0f;
+            uint32_t playerScore = 100;
+            std::string scoreStr = std::string("Score: ") + std::to_string(playerScore);
+            ImGui::GetForegroundDrawList()->AddText(m_Font, 48.0f, pos, 0xffffffff, scoreStr.c_str());
             break;
         }
     }
