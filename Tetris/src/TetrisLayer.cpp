@@ -77,7 +77,7 @@ void TetrisLayer::OnUpdate(Hazel::Timestep ts)
         // ‰÷»æ«∞æ∞
         Hazel::Renderer2D::BeginScene(m_Camera);
         //Hazel::Renderer2D::DrawQuad({ 0.0f, 0.0f, 0.5f }, { 2.0f, 3.0f }, m_FrameTexture);
-        m_Level.OnRendererForeGround();
+        //m_Level.OnRendererForeGround();
         Hazel::Renderer2D::EndScene();
     }
 

@@ -40,6 +40,9 @@ private:
     std::array<Hazel::Ref<Hazel::SubTexture2D>, (int)Tile::NumTiles> m_Tiles;
 private:
     bool m_GameOver = false;
+    float m_DeltaTime = 0.0f;
+    float m_Delay = 0.3f;
+
     PlayMode m_PlayMode = PlayMode::Normal;
     std::vector<std::shared_ptr<Player>> m_Players;
 };
