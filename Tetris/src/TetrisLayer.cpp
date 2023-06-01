@@ -161,6 +161,7 @@ void TetrisLayer::OnEvent(Hazel::Event & e)
 {
     Hazel::EventDispatcher dispatcher(e);
     dispatcher.Dispatch<Hazel::KeyPressedEvent>(HZ_BIND_EVENT_FN(TetrisLayer::OnKeyPressed));
+    dispatcher.Dispatch<Hazel::KeyReleasedEvent>(HZ_BIND_EVENT_FN(TetrisLayer::OnKeyReleased));
 }
 
 bool TetrisLayer::OnKeyPressed(Hazel::KeyPressedEvent& e)
@@ -168,6 +169,19 @@ bool TetrisLayer::OnKeyPressed(Hazel::KeyPressedEvent& e)
     if (m_State == GameState::GameOver && e.GetKeyCode() == HZ_KEY_SPACE)
     {
         m_State = GameState::Play;
+    }
+    if (m_State == GameState::Play)
+    {
+        m_Level.OnKeyPressed(e);
+    }
+    return false;
+}
+
+bool TetrisLayer::OnKeyReleased(Hazel::KeyReleasedEvent& e)
+{
+    if (m_State == GameState::Play)
+    {
+        m_Level.OnKeyReleased(e);
     }
     return false;
 }

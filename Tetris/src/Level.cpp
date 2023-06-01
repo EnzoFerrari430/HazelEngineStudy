@@ -1,12 +1,13 @@
 #include <Hazel.h>
 #include "Level.h"
+#include "Random.h"
 
 // texture information
 constexpr float squareWidth = 18.0f * 2;
 constexpr float windowWidth = 640.0f;
 constexpr float windowHeight = 960.0f;
 constexpr float leftPadding = 28.0f * 2;
-constexpr float topPadding = 48.0f * 2;
+constexpr float topPadding = 31.0f * 2;
 
 constexpr int M = 20;
 constexpr int N = 10;
@@ -88,20 +89,24 @@ void Level::OnUpdate(Hazel::Timestep ts)
     m_DeltaTime += ts;
     //if (m_DeltaTime > m_Delay)
     {
-        bool rotate = false;
-        int dx = 0;
-        if (Hazel::Input::IsKeyPressed(HZ_KEY_UP))
-            rotate = true;
-        if (Hazel::Input::IsKeyPressed(HZ_KEY_LEFT))
-            dx = -1;
-        else if (Hazel::Input::IsKeyPressed(HZ_KEY_RIGHT))
-            dx = 1;
+        //bool rotate = false;
+        //int dx = 0;
+        //if (Hazel::Input::IsKeyPressed(HZ_KEY_UP))
+        //    rotate = true;
+        //if (Hazel::Input::IsKeyPressed(HZ_KEY_LEFT))
+        //    dx = -1;
+        //else if (Hazel::Input::IsKeyPressed(HZ_KEY_RIGHT))
+        //    dx = 1;
+        //if (Hazel::Input::IsKeyPressed(HZ_KEY_DOWN))
+        //    m_Delay = 0.05f;
+        //else
+        //    m_Delay = 0.3;
 
         // move
         for (int i = 0; i < 4; ++i)
         {
             b[i] = a[i];
-            a[i].x += dx;
+            a[i].x += m_DX;
         }
         if (!Check())
         {
@@ -110,7 +115,7 @@ void Level::OnUpdate(Hazel::Timestep ts)
         }
 
         // rotate
-        if (rotate)
+        if (m_Rotate)
         {
             Point p = a[1];  //center of rotation
             for (int i = 0; i < 4; ++i)
@@ -120,6 +125,7 @@ void Level::OnUpdate(Hazel::Timestep ts)
                 a[i].x = p.x - x;
                 a[i].y = p.y + y;
             }
+            if (!Check()) for (int i = 0; i < 4; i++) a[i] = b[i];
         }
 
         // tick
@@ -135,21 +141,19 @@ void Level::OnUpdate(Hazel::Timestep ts)
             {
                 for (int i = 0; i < 4; ++i)
                 {
-                    field[b[i].y][b[i].x] = colorNum;
+                    field[b[i].y][b[i].x] = m_InitColorNum + 1;
+                }
+                HZ_INFO("ssss");
+                m_InitColorNum = Random::Int(0, 6);
+                for (int i = 0; i < 4; ++i)
+                {
+                    a[i].x = figures[m_InitColorNum][i] % 2;
+                    a[i].y = figures[m_InitColorNum][i] / 2;
                 }
             }
 
             m_DeltaTime = 0.0f;
         }
-
-        int n = 4;
-        if (a[0].x == 0)
-            for (int i = 0; i < 4; ++i)
-            {
-                a[i].x = figures[n][i] % 2;
-                a[i].y = figures[n][i] / 2;
-            }
-
     }
 
 
@@ -158,25 +162,59 @@ void Level::OnUpdate(Hazel::Timestep ts)
 void Level::OnRenderer()
 {
     float size = squareWidth * 2.0f / windowWidth;
+    float size2 = squareWidth * 2.0f / windowHeight;
     float xOffset = leftPadding / (windowWidth / 2.0f) - 1.0f + size / 2.0f;
-    float yOffset = 1.0f - topPadding / (windowHeight / 2.0f);
+    float yOffset = 1.5f - size / 2.0f - topPadding / (windowWidth / 2.0f);  // WTF!
     for (int i = 0; i < M; ++i)
     {
         for (int j = 0; j < N; ++j)
         {
             if (field[i][j] == 0)
                 continue;
-            Hazel::Renderer2D::DrawQuad({i * size, j * size}, { size, size }, m_Tiles[0]);
+            Hazel::Renderer2D::DrawQuad({j * size + xOffset, yOffset - i * size}, { size, size }, m_Tiles[field[i][j] - 1]);
         }
     }
 
     for (int i = 0; i < 4; ++i)
     {
-        Hazel::Renderer2D::DrawQuad({ a[i].x * size + xOffset, a[i].y * size + yOffset}, { size, size }, m_Tiles[0]);
-        //Hazel::Renderer2D::DrawQuad({ -0.825f + size / 2.0f, a[i].y * size }, { size, size }, m_Tiles[0]);
+        Hazel::Renderer2D::DrawQuad({ a[i].x * size + xOffset, yOffset - a[i].y * size }, { size, size }, m_Tiles[m_InitColorNum]);
         HZ_INFO("int point: ({0}:{1})", a[i].x, a[i].y);
         HZ_INFO("float point: ({0}:{1})", a[i].x * size + xOffset, a[i].y * size);
     }
+}
+
+bool Level::OnKeyPressed(Hazel::KeyPressedEvent& e)
+{
+    if (e.GetKeyCode() == HZ_KEY_UP)
+    {
+        m_Rotate = true;
+    }
+    if (e.GetKeyCode() == HZ_KEY_LEFT)
+    {
+        m_DX = -1;
+    }
+    else if (e.GetKeyCode() == HZ_KEY_RIGHT)
+    {
+        m_DX = 1;
+    }
+    return false;
+}
+
+bool Level::OnKeyReleased(Hazel::KeyReleasedEvent& e)
+{
+    if (e.GetKeyCode() == HZ_KEY_UP)
+    {
+        m_Rotate = false;
+    }
+    if (e.GetKeyCode() == HZ_KEY_LEFT)
+    {
+        m_DX = 0;
+    }
+    else if (e.GetKeyCode() == HZ_KEY_RIGHT)
+    {
+        m_DX = 0;
+    }
+    return false;
 }
 
 void Level::OnRendererForeGround()
@@ -191,7 +229,11 @@ void Level::OnRendererBackGround()
 
 void Level::InitNormal()
 {
-
+    for (int i = 0; i < 4; ++i)
+    {
+        a[i].x = figures[m_InitColorNum][i] % 2;
+        a[i].y = figures[m_InitColorNum][i] / 2;
+    }
 }
 
 void Level::InitDrakLight()

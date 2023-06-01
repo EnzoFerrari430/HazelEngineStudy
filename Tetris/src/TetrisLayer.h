@@ -58,6 +58,7 @@ public:
     void OnEvent(Hazel::Event& e) override;
 private:
     bool OnKeyPressed(Hazel::KeyPressedEvent& e);
+    bool OnKeyReleased(Hazel::KeyReleasedEvent& e);
 private:
     Hazel::OrthographicCamera m_Camera;
     Hazel::Ref<Hazel::Shader> m_TetrisShader;

@@ -25,7 +25,11 @@ public:
 
     bool IsGameOver() const { return m_GameOver; }
 
+    bool OnKeyPressed(Hazel::KeyPressedEvent& e);
+    bool OnKeyReleased(Hazel::KeyReleasedEvent& e);
 private:
+
+
     void GameOver() { m_GameOver = true; }
 
     void InitNormal();
@@ -42,6 +46,9 @@ private:
     bool m_GameOver = false;
     float m_DeltaTime = 0.0f;
     float m_Delay = 0.3f;
+    bool m_Rotate = false;
+    int m_DX = 0;
+    int m_InitColorNum = 4;
 
     PlayMode m_PlayMode = PlayMode::Normal;
     std::vector<std::shared_ptr<Player>> m_Players;
