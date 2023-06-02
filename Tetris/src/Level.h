@@ -44,11 +44,22 @@ private:
     std::array<Hazel::Ref<Hazel::SubTexture2D>, (int)Tile::NumTiles> m_Tiles;
 private:
     bool m_GameOver = false;
-    float m_DeltaTime = 0.0f;
-    float m_Delay = 0.3f;
-    bool m_Rotate = false;
-    int m_DX = 0;
     int m_InitColorNum = 4;
+
+    //下落的间隔
+    float m_FallTime = 0.0f;
+    float m_FallDelay = 0.3f;
+
+    //旋转间隔
+    bool m_Rotate = false;
+    bool m_Rotated = true;
+    float m_RotateTime = 0.0f;
+    float m_RotateDelay = 0.1f;
+
+    //左右位移间隔
+    int m_DX = 0;
+    float m_DXTime = 0.0f;
+    float m_DXDelay = 0.05f;
 
     PlayMode m_PlayMode = PlayMode::Normal;
     std::vector<std::shared_ptr<Player>> m_Players;

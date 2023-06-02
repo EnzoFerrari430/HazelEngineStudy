@@ -86,50 +86,69 @@ void Level::Reset()
 
 void Level::OnUpdate(Hazel::Timestep ts)
 {
-    m_DeltaTime += ts;
+    m_FallTime += ts;
+    m_RotateTime += ts;
+    m_DXTime += ts;
     //if (m_DeltaTime > m_Delay)
     {
-        //bool rotate = false;
-        //int dx = 0;
-        //if (Hazel::Input::IsKeyPressed(HZ_KEY_UP))
-        //    rotate = true;
-        //if (Hazel::Input::IsKeyPressed(HZ_KEY_LEFT))
-        //    dx = -1;
-        //else if (Hazel::Input::IsKeyPressed(HZ_KEY_RIGHT))
-        //    dx = 1;
-        //if (Hazel::Input::IsKeyPressed(HZ_KEY_DOWN))
-        //    m_Delay = 0.05f;
-        //else
-        //    m_Delay = 0.3;
+        if (Hazel::Input::IsKeyPressed(HZ_KEY_UP))
+        {
+            m_Rotate = true;
+        }
+        else
+        {
+            m_Rotate = false;
+            m_Rotated = false;
+        }
+
+        if (Hazel::Input::IsKeyPressed(HZ_KEY_LEFT))
+            m_DX = -1;
+        else if (Hazel::Input::IsKeyPressed(HZ_KEY_RIGHT))
+            m_DX = 1;
+        if (Hazel::Input::IsKeyPressed(HZ_KEY_DOWN))
+            m_FallDelay = 0.05f;
+        else
+            m_FallDelay = 0.3f;
 
         // move
-        for (int i = 0; i < 4; ++i)
+        if (m_DXTime > m_DXDelay)
         {
-            b[i] = a[i];
-            a[i].x += m_DX;
-        }
-        if (!Check())
-        {
-            for (int i = 0; i < 4; ++i)
-                a[i] = b[i];
-        }
-
-        // rotate
-        if (m_Rotate)
-        {
-            Point p = a[1];  //center of rotation
             for (int i = 0; i < 4; ++i)
             {
-                int x = a[i].y - p.y;
-                int y = a[i].x - p.x;
-                a[i].x = p.x - x;
-                a[i].y = p.y + y;
+                b[i] = a[i];
+                a[i].x += m_DX;
             }
-            if (!Check()) for (int i = 0; i < 4; i++) a[i] = b[i];
+            if (!Check())
+            {
+                for (int i = 0; i < 4; ++i)
+                    a[i] = b[i];
+            }
+            m_DXTime = 0.0f;
         }
 
+
+        // rotate
+        if (m_RotateTime > m_RotateDelay)
+        {
+            if (m_Rotate && !m_Rotated)
+            {
+                Point p = a[1];  //center of rotation
+                for (int i = 0; i < 4; ++i)
+                {
+                    int x = a[i].y - p.y;
+                    int y = a[i].x - p.x;
+                    a[i].x = p.x - x;
+                    a[i].y = p.y + y;
+                }
+                if (!Check()) for (int i = 0; i < 4; i++) a[i] = b[i];
+                m_Rotated = true;
+            }
+            m_RotateTime = 0.0f;
+        }
+
+
         // tick
-        if (m_DeltaTime > m_Delay)
+        if (m_FallTime > m_FallDelay)
         {
             for (int i = 0; i < 4; ++i)
             {
@@ -152,7 +171,7 @@ void Level::OnUpdate(Hazel::Timestep ts)
                 }
             }
 
-            m_DeltaTime = 0.0f;
+            m_FallTime = 0.0f;
         }
     }
 
