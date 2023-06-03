@@ -38,6 +38,9 @@ void TetrisLayer::OnUpdate(Hazel::Timestep ts)
     if ((int)(m_Time * 10.0f) % 8 > 4)
         m_Blink = !m_Blink;
 
+    if (m_Level.IsGameOver())
+        m_State = GameState::GameOver;
+
     switch (m_State)
     {
         case GameState::Play:
@@ -120,13 +123,18 @@ void TetrisLayer::OnImGuiRender()
             pos.x += width * 0.5f - 300.0f;
             pos.y += 50.0f;
             if (m_Blink)
-                ImGui::GetForegroundDrawList()->AddText(m_Font, 120.0f, pos, 0xffffffff, "Click to Play!");
+            {
+                ImGui::GetForegroundDrawList()->AddText(m_Font, 120.0f, pos, 0xff000000, "GameOver");
+                pos.y += 120.0f;
+                ImGui::GetForegroundDrawList()->AddText(m_Font, 120.0f, pos, 0xff000000, "Play Again!");
+            }
 
-            pos.x += 200.0f;
-            pos.y += 150.0f;
-            uint32_t playerScore = 100;
+            pos = ImGui::GetWindowPos();
+            pos.x += width * 0.5f - 300.0f;
+            pos.y -= 90.0f;
+            uint32_t playerScore = m_Level.GetScore();
             std::string scoreStr = std::string("Score: ") + std::to_string(playerScore);
-            ImGui::GetForegroundDrawList()->AddText(m_Font, 48.0f, pos, 0xffffffff, scoreStr.c_str());
+            ImGui::GetForegroundDrawList()->AddText(m_Font, 48.0f, pos, 0xffff00ff, scoreStr.c_str());
             break;
         }
     }
@@ -159,15 +167,16 @@ void TetrisLayer::OnImGuiRender()
 
 void TetrisLayer::OnEvent(Hazel::Event & e)
 {
-    Hazel::EventDispatcher dispatcher(e);
+    Hazel::EventDispatcher dispatcher(e);    
     dispatcher.Dispatch<Hazel::KeyPressedEvent>(HZ_BIND_EVENT_FN(TetrisLayer::OnKeyPressed));
     dispatcher.Dispatch<Hazel::KeyReleasedEvent>(HZ_BIND_EVENT_FN(TetrisLayer::OnKeyReleased));
 }
 
 bool TetrisLayer::OnKeyPressed(Hazel::KeyPressedEvent& e)
 {
-    if (m_State == GameState::GameOver && e.GetKeyCode() == HZ_KEY_SPACE)
+    if ((m_State == GameState::GameOver || m_State == GameState::MainMenu) && e.GetKeyCode() == HZ_KEY_SPACE)
     {
+        m_Level.Reset();
         m_State = GameState::Play;
     }
     if (m_State == GameState::Play)

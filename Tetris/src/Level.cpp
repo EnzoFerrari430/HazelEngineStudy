@@ -67,6 +67,10 @@ void Level::SetPlayMode(PlayMode mode)
 
 void Level::Reset()
 {
+    m_GameOver = false;
+    m_Score = 0;
+    memset(field, 0x00, sizeof(field));
+
     switch (m_PlayMode)
     {
     case PlayMode::Normal:
@@ -166,8 +170,13 @@ void Level::OnUpdate(Hazel::Timestep ts)
                 m_InitColorNum = Random::Int(0, 6);
                 for (int i = 0; i < 4; ++i)
                 {
-                    a[i].x = figures[m_InitColorNum][i] % 2;
-                    a[i].y = figures[m_InitColorNum][i] / 2;
+                    a[i].x = figures[m_InitColorNum][i] % 2 + 4;
+                    a[i].y = figures[m_InitColorNum][i] / 2 - 1;
+                }
+
+                if (CollisionTest())
+                {
+                    GameOver();
                 }
             }
 
@@ -223,6 +232,18 @@ void Level::OnRenderer()
     }
 }
 
+bool Level::CollisionTest()
+{
+    for (int i = 0; i < 4; i++)
+        if (field[a[i].y][a[i].x]) return true;
+    return false;
+}
+
+void Level::GameOver()
+{
+    m_GameOver = true;
+}
+
 bool Level::OnKeyPressed(Hazel::KeyPressedEvent& e)
 {
     if (e.GetKeyCode() == HZ_KEY_UP)
@@ -269,10 +290,11 @@ void Level::OnRendererBackGround()
 
 void Level::InitNormal()
 {
+    // ÎªÁË¾ÓÖÐ x + 4, y - 1
     for (int i = 0; i < 4; ++i)
     {
-        a[i].x = figures[m_InitColorNum][i] % 2;
-        a[i].y = figures[m_InitColorNum][i] / 2;
+        a[i].x = figures[m_InitColorNum][i] % 2 + 4;
+        a[i].y = figures[m_InitColorNum][i] / 2 - 1;
     }
 }
 

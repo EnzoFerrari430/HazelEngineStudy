@@ -29,9 +29,9 @@ public:
     bool OnKeyPressed(Hazel::KeyPressedEvent& e);
     bool OnKeyReleased(Hazel::KeyReleasedEvent& e);
 private:
+    bool CollisionTest();
 
-
-    void GameOver() { m_GameOver = true; }
+    void GameOver();
 
     void InitNormal();
     void InitDrakLight();
@@ -61,7 +61,7 @@ private:
     //◊Û”“Œª“∆º‰∏Ù
     int m_DX = 0;
     float m_DXTime = 0.0f;
-    float m_DXDelay = 0.05f;
+    float m_DXDelay = 0.1f;
 
     PlayMode m_PlayMode = PlayMode::Normal;
     std::vector<std::shared_ptr<Player>> m_Players;
