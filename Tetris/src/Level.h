@@ -24,6 +24,7 @@ public:
 
 
     bool IsGameOver() const { return m_GameOver; }
+    int GetScore() const { return m_Score; }
 
     bool OnKeyPressed(Hazel::KeyPressedEvent& e);
     bool OnKeyReleased(Hazel::KeyReleasedEvent& e);
@@ -44,6 +45,7 @@ private:
     std::array<Hazel::Ref<Hazel::SubTexture2D>, (int)Tile::NumTiles> m_Tiles;
 private:
     bool m_GameOver = false;
+    int m_Score = 0;
     int m_InitColorNum = 4;
 
     //ÏÂÂäµÄ¼ä¸ô

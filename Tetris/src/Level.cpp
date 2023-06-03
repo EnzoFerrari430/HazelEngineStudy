@@ -100,7 +100,7 @@ void Level::OnUpdate(Hazel::Timestep ts)
             m_Rotate = false;
             m_Rotated = false;
         }
-
+        m_DX = 0;
         if (Hazel::Input::IsKeyPressed(HZ_KEY_LEFT))
             m_DX = -1;
         else if (Hazel::Input::IsKeyPressed(HZ_KEY_RIGHT))
@@ -172,6 +172,27 @@ void Level::OnUpdate(Hazel::Timestep ts)
             }
 
             m_FallTime = 0.0f;
+        }
+
+        //check lines
+        int k = M - 1;
+        for (int i = M - 1; i > 0; --i)
+        {
+            int count = 0;
+            for (int j = 0; j < N; ++j)
+            {
+                if (field[i][j])
+                    count++;
+                field[k][j] = field[i][j];
+            }
+            if (count < N)
+            {
+                --k;
+            }
+            else
+            {
+                ++m_Score;
+            }
         }
     }
 

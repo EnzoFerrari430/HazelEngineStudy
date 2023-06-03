@@ -77,7 +77,7 @@ void TetrisLayer::OnUpdate(Hazel::Timestep ts)
         // ‰÷»æ«∞æ∞
         Hazel::Renderer2D::BeginScene(m_Camera);
         //Hazel::Renderer2D::DrawQuad({ 0.0f, 0.0f, 0.5f }, { 2.0f, 3.0f }, m_FrameTexture);
-        //m_Level.OnRendererForeGround();
+        m_Level.OnRendererForeGround();
         Hazel::Renderer2D::EndScene();
     }
 
@@ -90,7 +90,7 @@ void TetrisLayer::OnImGuiRender()
     {
         case GameState::Play:
         {
-            uint32_t playerScore = 100;
+            uint32_t playerScore = m_Level.GetScore();
             std::string scoreStr = std::string("Score: ") + std::to_string(playerScore);
             auto pos = ImGui::GetWindowPos();
             auto width = Hazel::Application::Get().GetWindow().GetWidth();
@@ -172,7 +172,7 @@ bool TetrisLayer::OnKeyPressed(Hazel::KeyPressedEvent& e)
     }
     if (m_State == GameState::Play)
     {
-        m_Level.OnKeyPressed(e);
+        //m_Level.OnKeyPressed(e);
     }
     return false;
 }
@@ -181,7 +181,7 @@ bool TetrisLayer::OnKeyReleased(Hazel::KeyReleasedEvent& e)
 {
     if (m_State == GameState::Play)
     {
-        m_Level.OnKeyReleased(e);
+        //m_Level.OnKeyReleased(e);
     }
     return false;
 }
