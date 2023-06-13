@@ -106,9 +106,21 @@ void Level::OnUpdate(Hazel::Timestep ts)
         }
         m_DX = 0;
         if (Hazel::Input::IsKeyPressed(HZ_KEY_LEFT))
+        {
             m_DX = -1;
+            m_DXRepeat = true;
+        }
         else if (Hazel::Input::IsKeyPressed(HZ_KEY_RIGHT))
+        {
             m_DX = 1;
+            m_DXRepeat = true;
+        }
+        else
+        {
+            m_DXRepeat = false;
+            m_DXDelay = 0.1f;
+        }
+
         if (Hazel::Input::IsKeyPressed(HZ_KEY_DOWN))
             m_FallDelay = 0.05f;
         else
@@ -128,11 +140,13 @@ void Level::OnUpdate(Hazel::Timestep ts)
                     a[i] = b[i];
             }
             m_DXTime = 0.0f;
+            if (m_DXRepeat)
+                m_DXDelay = 0.05f;
         }
 
 
         // rotate
-        if (m_RotateTime > m_RotateDelay)
+        //if (m_RotateTime > m_RotateDelay)
         {
             if (m_Rotate && !m_Rotated)
             {
@@ -166,7 +180,6 @@ void Level::OnUpdate(Hazel::Timestep ts)
                 {
                     field[b[i].y][b[i].x] = m_InitColorNum + 1;
                 }
-                HZ_INFO("ssss");
                 m_InitColorNum = Random::Int(0, 6);
                 for (int i = 0; i < 4; ++i)
                 {
@@ -227,8 +240,8 @@ void Level::OnRenderer()
     for (int i = 0; i < 4; ++i)
     {
         Hazel::Renderer2D::DrawQuad({ a[i].x * size + xOffset, yOffset - a[i].y * size }, { size, size }, m_Tiles[m_InitColorNum]);
-        HZ_INFO("int point: ({0}:{1})", a[i].x, a[i].y);
-        HZ_INFO("float point: ({0}:{1})", a[i].x * size + xOffset, a[i].y * size);
+        //HZ_INFO("int point: ({0}:{1})", a[i].x, a[i].y);
+        //HZ_INFO("float point: ({0}:{1})", a[i].x * size + xOffset, a[i].y * size);
     }
 }
 

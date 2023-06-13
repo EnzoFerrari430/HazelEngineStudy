@@ -6,6 +6,7 @@
 
 namespace Hazel {
 
+    // glfwGetKey无法获取GLFW_REPEAT状态, 需要在clent端自己设置GLFW_REPEAT状态
     bool WindowsInput::IsKeyPressedImpl(KeyCode key)
     {
         auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());

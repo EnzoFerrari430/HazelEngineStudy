@@ -59,7 +59,12 @@ private:
     float m_RotateDelay = 0.1f;
 
     //左右位移间隔
+    //TODO: 增加一个容器 记录每一帧键盘是按了左键还是右键
+    //      重复按键就记录到容器中, 并进行逻辑判断
     int m_DX = 0;
+    bool m_DXRepeat = false;
+    bool m_DXRepeated = false;
+    float m_DXRepeatDelayTime = 0.2f;
     float m_DXTime = 0.0f;
     float m_DXDelay = 0.1f;
 
