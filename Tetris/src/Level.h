@@ -4,10 +4,17 @@
 
 enum class PlayMode
 {
-    Normal,         //ÆÕÍ¨Ä£Ê½
-    Cooperation,    //ºÏ×÷Ä£Ê½
-    Versus,         //¶Ô¿¹Ä£Ê½
-    DarkLight       //°µ¹âÄ£Ê½
+    Normal,         //æ™®é€šæ¨¡å¼
+    Cooperation,    //åˆä½œæ¨¡å¼
+    Versus,         //å¯¹æŠ—æ¨¡å¼
+    DarkLight       //æš—å…‰æ¨¡å¼
+};
+
+enum MoveDirection
+{
+    Left,
+    Right,
+    None
 };
 
 class Level
@@ -48,25 +55,24 @@ private:
     int m_Score = 0;
     int m_InitColorNum = 4;
 
-    //ÏÂÂäµÄ¼ä¸ô
+    //ä¸‹è½çš„é—´éš”
     float m_FallTime = 0.0f;
     float m_FallDelay = 0.3f;
 
-    //Ğı×ª¼ä¸ô
+    //æ—‹è½¬é—´éš”
     bool m_Rotate = false;
     bool m_Rotated = true;
     float m_RotateTime = 0.0f;
     float m_RotateDelay = 0.1f;
 
-    //×óÓÒÎ»ÒÆ¼ä¸ô
-    //TODO: Ôö¼ÓÒ»¸öÈİÆ÷ ¼ÇÂ¼Ã¿Ò»Ö¡¼üÅÌÊÇ°´ÁË×ó¼ü»¹ÊÇÓÒ¼ü
-    //      ÖØ¸´°´¼ü¾Í¼ÇÂ¼µ½ÈİÆ÷ÖĞ, ²¢½øĞĞÂß¼­ÅĞ¶Ï
+    //å·¦å³ä½ç§»é—´éš”
+    //TODO: å¢åŠ ä¸€ä¸ªå®¹å™¨ è®°å½•æ¯ä¸€å¸§é”®ç›˜æ˜¯æŒ‰äº†å·¦é”®è¿˜æ˜¯å³é”®
+    //      é‡å¤æŒ‰é”®å°±è®°å½•åˆ°å®¹å™¨ä¸­, å¹¶è¿›è¡Œé€»è¾‘åˆ¤æ–­
     int m_DX = 0;
-    bool m_DXRepeat = false;
-    bool m_DXRepeated = false;
-    float m_DXRepeatDelayTime = 0.2f;
     float m_DXTime = 0.0f;
-    float m_DXDelay = 0.1f;
+    float m_DXDelay = 1.5f;
+    MoveDirection m_CurrentMove = MoveDirection::None;
+    MoveDirection m_LastMove = MoveDirection::None;
 
     PlayMode m_PlayMode = PlayMode::Normal;
     std::vector<std::shared_ptr<Player>> m_Players;

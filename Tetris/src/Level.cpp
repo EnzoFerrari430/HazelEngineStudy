@@ -107,19 +107,20 @@ void Level::OnUpdate(Hazel::Timestep ts)
         m_DX = 0;
         if (Hazel::Input::IsKeyPressed(HZ_KEY_LEFT))
         {
+            m_CurrentMove = MoveDirection::Left;
             m_DX = -1;
-            m_DXRepeat = true;
         }
         else if (Hazel::Input::IsKeyPressed(HZ_KEY_RIGHT))
         {
+            m_CurrentMove = MoveDirection::Right;
             m_DX = 1;
-            m_DXRepeat = true;
         }
         else
         {
-            m_DXRepeat = false;
-            m_DXDelay = 0.1f;
+            m_CurrentMove = MoveDirection::None;
+            m_DXDelay = 1.5f;
         }
+        HZ_TRACE("The Key Pressed: {0}", m_CurrentMove);
 
         if (Hazel::Input::IsKeyPressed(HZ_KEY_DOWN))
             m_FallDelay = 0.05f;
@@ -127,7 +128,7 @@ void Level::OnUpdate(Hazel::Timestep ts)
             m_FallDelay = 0.3f;
 
         // move
-        if (m_DXTime > m_DXDelay)
+        if (m_CurrentMove != m_LastMove)
         {
             for (int i = 0; i < 4; ++i)
             {
@@ -139,9 +140,30 @@ void Level::OnUpdate(Hazel::Timestep ts)
                 for (int i = 0; i < 4; ++i)
                     a[i] = b[i];
             }
-            m_DXTime = 0.0f;
-            if (m_DXRepeat)
+
+            m_LastMove = m_CurrentMove;
+            m_DXDelay = 1.5f;
+        }
+        else
+        {
+            // 连续移动
+            if (m_DXTime > m_DXDelay)
+            {
+                for (int i = 0; i < 4; ++i)
+                {
+                    b[i] = a[i];
+                    a[i].x += m_DX;
+                }
+                if (!Check())
+                {
+                    for (int i = 0; i < 4; ++i)
+                        a[i] = b[i];
+                }
+
+                m_LastMove = m_CurrentMove;
+                m_DXTime = 0.0f;
                 m_DXDelay = 0.05f;
+            }
         }
 
 
@@ -171,7 +193,7 @@ void Level::OnUpdate(Hazel::Timestep ts)
             for (int i = 0; i < 4; ++i)
             {
                 b[i] = a[i];
-                a[i].y += 1;
+                //a[i].y += 1;
             }
 
             if (!Check())
@@ -184,8 +206,9 @@ void Level::OnUpdate(Hazel::Timestep ts)
                 for (int i = 0; i < 4; ++i)
                 {
                     a[i].x = figures[m_InitColorNum][i] % 2 + 4;
-                    a[i].y = figures[m_InitColorNum][i] / 2 - 1;
+                    a[i].y = figures[m_InitColorNum][i] / 2 + 1;
                 }
+                m_LastMove = MoveDirection::None;
 
                 if (CollisionTest())
                 {
@@ -303,11 +326,11 @@ void Level::OnRendererBackGround()
 
 void Level::InitNormal()
 {
-    // Ϊ�˾��� x + 4, y - 1
+    // 为了居中 x + 4, y - 1
     for (int i = 0; i < 4; ++i)
     {
         a[i].x = figures[m_InitColorNum][i] % 2 + 4;
-        a[i].y = figures[m_InitColorNum][i] / 2 - 1;
+        a[i].y = figures[m_InitColorNum][i] / 2 + 1;
     }
 }
 
