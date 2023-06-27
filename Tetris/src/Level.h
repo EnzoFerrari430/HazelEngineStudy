@@ -70,7 +70,7 @@ private:
     //      重复按键就记录到容器中, 并进行逻辑判断
     int m_DX = 0;
     float m_DXTime = 0.0f;
-    float m_DXDelay = 1.5f;
+    float m_DXDelay = 0.15f;
     MoveDirection m_CurrentMove = MoveDirection::None;
     MoveDirection m_LastMove = MoveDirection::None;
 

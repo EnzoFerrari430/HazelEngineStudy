@@ -118,9 +118,8 @@ void Level::OnUpdate(Hazel::Timestep ts)
         else
         {
             m_CurrentMove = MoveDirection::None;
-            m_DXDelay = 1.5f;
+            m_DXDelay = 0.15f;
         }
-        HZ_TRACE("The Key Pressed: {0}", m_CurrentMove);
 
         if (Hazel::Input::IsKeyPressed(HZ_KEY_DOWN))
             m_FallDelay = 0.05f;
@@ -142,7 +141,8 @@ void Level::OnUpdate(Hazel::Timestep ts)
             }
 
             m_LastMove = m_CurrentMove;
-            m_DXDelay = 1.5f;
+            m_DXTime = 0.0f;
+            m_DXDelay = 0.15f;
         }
         else
         {
@@ -193,7 +193,7 @@ void Level::OnUpdate(Hazel::Timestep ts)
             for (int i = 0; i < 4; ++i)
             {
                 b[i] = a[i];
-                //a[i].y += 1;
+                a[i].y += 1;
             }
 
             if (!Check())
@@ -206,7 +206,7 @@ void Level::OnUpdate(Hazel::Timestep ts)
                 for (int i = 0; i < 4; ++i)
                 {
                     a[i].x = figures[m_InitColorNum][i] % 2 + 4;
-                    a[i].y = figures[m_InitColorNum][i] / 2 + 1;
+                    a[i].y = figures[m_InitColorNum][i] / 2 - 1;
                 }
                 m_LastMove = MoveDirection::None;
 
@@ -330,7 +330,7 @@ void Level::InitNormal()
     for (int i = 0; i < 4; ++i)
     {
         a[i].x = figures[m_InitColorNum][i] % 2 + 4;
-        a[i].y = figures[m_InitColorNum][i] / 2 + 1;
+        a[i].y = figures[m_InitColorNum][i] / 2 - 1;
     }
 }
 
