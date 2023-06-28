@@ -77,7 +77,7 @@ private:
 
     enum class GameState
     {
-        Play = 0, MainMenu = 1, GameOver = 2
+        Play = 0, MainMenu = 1, GameOver = 2, Pause = 3
     };
     GameState m_State = GameState::MainMenu;
 

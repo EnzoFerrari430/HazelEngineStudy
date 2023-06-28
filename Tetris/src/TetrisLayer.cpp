@@ -1,5 +1,6 @@
 #include "hzpch.h"
 #include "TetrisLayer.h"
+#include "Random.h"
 
 #include <ImGui/imgui.h>
 
@@ -11,7 +12,7 @@ TetrisLayer::TetrisLayer()
     : Hazel::Layer("TetrisLayer")
     , m_Camera(-1.0f, 1.0f, -1.5f, 1.5f, -1.0f, 1.0f)
 {
-
+    Random::Init();
 }
 
 void TetrisLayer::OnAttach()
@@ -33,7 +34,7 @@ void TetrisLayer::OnUpdate(Hazel::Timestep ts)
     PROFILE_SCOPE("TetrisLayer::OnUpdate");
     HZ_PROFILE_FUNCTION();
 
-    // Âß¼­¿ØÖÆ
+    // é€»è¾‘æ§åˆ¶
     m_Time += ts;
     if ((int)(m_Time * 10.0f) % 8 > 4)
         m_Blink = !m_Blink;
@@ -50,7 +51,7 @@ void TetrisLayer::OnUpdate(Hazel::Timestep ts)
         }
     }
 
-    // äÖÈ¾²¿·Ö
+    // æ¸²æŸ“éƒ¨åˆ†
     Hazel::Renderer2D::ResetStats();
     {
         HZ_PROFILE_SCOPE("Renderer Prep");
@@ -61,13 +62,13 @@ void TetrisLayer::OnUpdate(Hazel::Timestep ts)
     {
         HZ_PROFILE_SCOPE("Renderer Draw");
 
-        // äÖÈ¾±³¾°
+        // æ¸²æŸ“èƒŒæ™¯
         Hazel::Renderer2D::BeginScene(m_Camera);
         //Hazel::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.5f }, { 2.0f, 3.0f }, m_BackgroundTexture);
         m_Level.OnRendererBackGround();
         Hazel::Renderer2D::EndScene();
 
-        // äÖÈ¾·½¿é
+        // æ¸²æŸ“æ–¹å—
         Hazel::Renderer2D::BeginScene(m_Camera);
         //float size = 18.0f * 4.0f / 640.0f;
         //for (size_t i = 0; i < m_Tiles.size(); ++i)
@@ -77,7 +78,7 @@ void TetrisLayer::OnUpdate(Hazel::Timestep ts)
         m_Level.OnRenderer();
         Hazel::Renderer2D::EndScene();
 
-        // äÖÈ¾Ç°¾°
+        // æ¸²æŸ“å‰æ™¯
         Hazel::Renderer2D::BeginScene(m_Camera);
         //Hazel::Renderer2D::DrawQuad({ 0.0f, 0.0f, 0.5f }, { 2.0f, 3.0f }, m_FrameTexture);
         m_Level.OnRendererForeGround();
@@ -105,7 +106,7 @@ void TetrisLayer::OnImGuiRender()
         }
         case GameState::MainMenu:
         {
-            // ImU32 colË³Ğò: ARGB
+            // ImU32 colé¡ºåº: ARGB
             auto pos = ImGui::GetWindowPos();
             auto width = Hazel::Application::Get().GetWindow().GetWidth();
             auto height = Hazel::Application::Get().GetWindow().GetHeight();
@@ -113,6 +114,13 @@ void TetrisLayer::OnImGuiRender()
             pos.y += 50.0f;
             if (m_Blink)
                 ImGui::GetForegroundDrawList()->AddText(m_Font, 120.0f, pos, 0xff000000, "Click to Play!");
+
+            pos = ImGui::GetWindowPos();
+            pos.x += width * 0.5f - 300.0f;
+            pos.y -= 90.0f;
+            uint32_t playerScore = m_Level.GetScore();
+            std::string scoreStr = std::string("Score: ") + std::to_string(playerScore);
+            ImGui::GetForegroundDrawList()->AddText(m_Font, 48.0f, pos, 0xffff00ff, scoreStr.c_str());
             break;
         }
         case GameState::GameOver:
@@ -127,6 +135,28 @@ void TetrisLayer::OnImGuiRender()
                 ImGui::GetForegroundDrawList()->AddText(m_Font, 120.0f, pos, 0xff000000, "GameOver");
                 pos.y += 120.0f;
                 ImGui::GetForegroundDrawList()->AddText(m_Font, 120.0f, pos, 0xff000000, "Play Again!");
+            }
+
+            pos = ImGui::GetWindowPos();
+            pos.x += width * 0.5f - 300.0f;
+            pos.y -= 90.0f;
+            uint32_t playerScore = m_Level.GetScore();
+            std::string scoreStr = std::string("Score: ") + std::to_string(playerScore);
+            ImGui::GetForegroundDrawList()->AddText(m_Font, 48.0f, pos, 0xffff00ff, scoreStr.c_str());
+            break;
+        }
+        case GameState::Pause:
+        {
+            auto pos = ImGui::GetWindowPos();
+            auto width = Hazel::Application::Get().GetWindow().GetWidth();
+            auto height = Hazel::Application::Get().GetWindow().GetHeight();
+            pos.x += width * 0.5f - 300.0f;
+            pos.y += 50.0f;
+            //if (m_Blink)
+            {
+                ImGui::GetForegroundDrawList()->AddText(m_Font, 120.0f, pos, 0xff000000, "Press Esc");
+                pos.y += 120.0f;
+                ImGui::GetForegroundDrawList()->AddText(m_Font, 120.0f, pos, 0xff000000, "to Resume");
             }
 
             pos = ImGui::GetWindowPos();
@@ -179,9 +209,16 @@ bool TetrisLayer::OnKeyPressed(Hazel::KeyPressedEvent& e)
         m_Level.Reset();
         m_State = GameState::Play;
     }
-    if (m_State == GameState::Play)
+
+    if (m_State == GameState::Play && e.GetKeyCode() == HZ_KEY_ESCAPE)
     {
-        //m_Level.OnKeyPressed(e);
+        //Pause the game
+        m_State = GameState::Pause;
+    }
+    else if (m_State == GameState::Pause && e.GetKeyCode() == HZ_KEY_ESCAPE)
+    {
+        //Resume the game
+        m_State = GameState::Play;
     }
     return false;
 }

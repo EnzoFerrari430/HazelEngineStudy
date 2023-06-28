@@ -14,10 +14,6 @@ public:
         return (float)s_Distribution(s_RandomEngine) / (float)std::numeric_limits<uint32_t>::max();
     }
 
-    static float Uniform0_1(){
-        return (float)s_Distribution(s_RandomEngine) / (float)std::numeric_limits<uint32_t>::max();
-    }
-
     static int Int(int min, int max)
     {
         int length = max - min + 1;
