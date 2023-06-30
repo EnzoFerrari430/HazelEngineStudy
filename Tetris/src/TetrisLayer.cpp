@@ -1,6 +1,7 @@
 #include "hzpch.h"
 #include "TetrisLayer.h"
 #include "Random.h"
+#include "TetrisAudio.h"
 
 #include <ImGui/imgui.h>
 
@@ -21,6 +22,7 @@ void TetrisLayer::OnAttach()
     m_Font = io.Fonts->AddFontFromFileTTF("assets/fonts/OpenSans-Regular.ttf", 120.0f);
     m_SettingFont = io.Fonts->AddFontFromFileTTF("assets/fonts/OpenSans-Regular.ttf", 20.0f);
 
+    TetrisAudio::Init();
     m_Level.Init();
 }
 

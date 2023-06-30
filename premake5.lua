@@ -27,10 +27,13 @@ IncludeDir["stb_image"] = "Hazel/vendor/stb_image"
 
 -- 引入GLFW的premake5文件
 group "Dependencies"
-	include "Hazel/vendor/GLFW"
-	include "Hazel/vendor/Glad"
-	include "Hazel/vendor/imgui"
-
+    include "Hazel/vendor/GLFW"
+    include "Hazel/vendor/Glad"
+    include "Hazel/vendor/imgui"
+    include "HazelAudio/HazelAudio"
+    include "HazelAudio/HazelAudio/vendor/OpenAL-Soft"
+    include "HazelAudio/HazelAudio/vendor/libogg"
+    include "HazelAudio/HazelAudio/vendor/Vorbis"
 group ""
 
 project "Hazel"
@@ -183,12 +186,14 @@ project "Tetris"
         "Hazel/vendor/spdlog/include",
         "Hazel/src",
         "Hazel/vendor",
+        "HazelAudio/HazelAudio/src",
         "%{IncludeDir.glm}"
     }
 
     links
     {
-        "Hazel"
+        "Hazel",
+        "HazelAudio"
     }
 
     filter "system:windows"
