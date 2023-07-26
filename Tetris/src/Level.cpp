@@ -2,6 +2,8 @@
 #include "Level.h"
 #include "Random.h"
 
+#include "TetrisAudio.h"
+
 // texture information
 constexpr float squareWidth = 18.0f * 2;
 constexpr float windowWidth = 640.0f;
@@ -140,6 +142,7 @@ void Level::OnUpdate(Hazel::Timestep ts)
                     a[i] = b[i];
             }
 
+            TetrisAudio::PlaySound(SoundEffect::Movement);
             m_LastMove = m_CurrentMove;
             m_DXTime = 0.0f;
             m_DXDelay = 0.15f;
@@ -158,6 +161,10 @@ void Level::OnUpdate(Hazel::Timestep ts)
                 {
                     for (int i = 0; i < 4; ++i)
                         a[i] = b[i];
+                }
+                else if(m_DX != 0)
+                {
+                    TetrisAudio::PlaySound(SoundEffect::Movement);
                 }
 
                 m_LastMove = m_CurrentMove;
@@ -181,6 +188,7 @@ void Level::OnUpdate(Hazel::Timestep ts)
                     a[i].y = p.y + y;
                 }
                 if (!Check()) for (int i = 0; i < 4; i++) a[i] = b[i];
+                else TetrisAudio::PlaySound(SoundEffect::Movement);
                 m_Rotated = true;
             }
             m_RotateTime = 0.0f;
@@ -195,6 +203,7 @@ void Level::OnUpdate(Hazel::Timestep ts)
                 b[i] = a[i];
                 a[i].y += 1;
             }
+            TetrisAudio::PlaySound(SoundEffect::Movement);
 
             if (!Check())
             {

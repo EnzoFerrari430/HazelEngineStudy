@@ -5,9 +5,9 @@
 enum class PlayMode
 {
     Normal,         //普通模式
+    DarkLight,      //暗光模式
     Cooperation,    //合作模式
-    Versus,         //对抗模式
-    DarkLight       //暗光模式
+    Versus          //对抗模式
 };
 
 enum MoveDirection
