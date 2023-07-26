@@ -3,7 +3,7 @@
 
 #define IMGUI_IMP_API
 #include "backends/imgui_impl_opengl3.h"
-#include "backends/imgui_impl_glfw.h" 
+#include "backends/imgui_impl_glfw.h"
 
 #include "Hazel/Core/Application.h"
 
@@ -37,6 +37,7 @@ namespace Hazel {
         //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
         io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
+        //io.ConfigFlags ^= ImGuiConfigFlags_NavEnableKeyboard;
         //io.ConfigViewportsNoAutoMerge = true;
         //io.ConfigViewportsNoTaskBarIcon = true;
 
@@ -51,6 +52,7 @@ namespace Hazel {
             style.WindowRounding = 0.0f;
             style.Colors[ImGuiCol_WindowBg].w = 1.0f;
         }
+        m_DefaultFont = io.Fonts->AddFontDefault();
 
         Application& app = Application::Get();
         GLFWwindow* window = static_cast<GLFWwindow*>(app.GetWindow().GetNativeWindow());
@@ -99,10 +101,12 @@ namespace Hazel {
         }
     }
 
-    //void ImGuiLayer::OnImGuiRender()
-    //{
-    //    static bool show = true;
-    //    ImGui::ShowDemoWindow(&show);
-    //}
+    void ImGuiLayer::OnImGuiRender()
+    {
+        ImGui::PushFont(m_DefaultFont);
+        static bool show = true;
+        ImGui::ShowDemoWindow(&show);
+        ImGui::PopFont();
+    }
 
 }

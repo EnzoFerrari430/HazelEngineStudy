@@ -187,7 +187,8 @@ project "Tetris"
         "Hazel/src",
         "Hazel/vendor",
         "HazelAudio/HazelAudio/src",
-        "%{IncludeDir.glm}"
+        "%{IncludeDir.glm}",
+        "%{IncludeDir.ImGui}"
     }
 
     links
