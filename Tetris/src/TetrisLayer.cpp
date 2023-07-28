@@ -10,7 +10,10 @@
 
 #include "Utility.h"
 
-std::string_view g_SpecialThanksSentence = "Creativity usually comes from small-budget studios who fear failure less.";
+std::string_view g_SpecialThanksSentence = R"(
+Creativity usually comes from small-budget studios who fear failure less.
+    -Jonathan Blow
+)";
 
 std::vector<std::string> TetrisLayer::m_MainMenus;
 
@@ -163,6 +166,7 @@ void TetrisLayer::OnImGuiRender()
         }
         case GameState::GameOver:
         {
+#if 0
             auto pos = ImGui::GetWindowPos();
             auto width = Hazel::Application::Get().GetWindow().GetWidth();
             auto height = Hazel::Application::Get().GetWindow().GetHeight();
@@ -182,9 +186,13 @@ void TetrisLayer::OnImGuiRender()
             std::string scoreStr = std::string("Score: ") + std::to_string(playerScore);
             ImGui::GetForegroundDrawList()->AddText(m_Font, 48.0f, pos, 0xffff00ff, scoreStr.c_str());
             break;
+#endif
+            ShowModeMenu(m_CurrentMenu);
+            break;
         }
         case GameState::Pause:
         {
+#if 0
             auto pos = ImGui::GetWindowPos();
             auto width = Hazel::Application::Get().GetWindow().GetWidth();
             auto height = Hazel::Application::Get().GetWindow().GetHeight();
@@ -203,6 +211,9 @@ void TetrisLayer::OnImGuiRender()
             uint32_t playerScore = m_Level.GetScore();
             std::string scoreStr = std::string("Score: ") + std::to_string(playerScore);
             ImGui::GetForegroundDrawList()->AddText(m_Font, 48.0f, pos, 0xffff00ff, scoreStr.c_str());
+            break;
+#endif
+            ShowModeMenu(m_CurrentMenu);
             break;
         }
     }
@@ -286,37 +297,60 @@ void TetrisLayer::InitMenus()
     m_MenuRoot = new MenuConfig;
     m_MenuRoot->subMenuCount = 3;
     m_MenuRoot->childs = new MenuConfig[3];
+    m_MenuRoot->itemID = MenuItem::Root;
 
     auto& startMenu = m_MenuRoot->childs[0];
     startMenu.parent = m_MenuRoot;
-    startMenu.ID = "Start";
+    startMenu.itemID = MenuItem::Start;
+    startMenu.type = ItemType::Label;
+    startMenu.text = "Start";
 
     auto& modeMenu = m_MenuRoot->childs[1];
     modeMenu.parent = m_MenuRoot;
-    modeMenu.ID = "Mode Choose";
+    modeMenu.itemID = MenuItem::ModeChoose;
+    modeMenu.type = ItemType::Label;
+    modeMenu.text = "Mode Choose";
     modeMenu.subMenuCount = 4;
     modeMenu.childs = new MenuConfig[4];
 
     auto& normalMode = modeMenu.childs[0];
     normalMode.parent = &modeMenu;
-    normalMode.ID = "Normal";
+    normalMode.itemID = MenuItem::ModeNormal;
+    normalMode.type = ItemType::Label;
+    normalMode.text = "Normal";
 
     auto& darkLightMode = modeMenu.childs[1];
     darkLightMode.parent = &modeMenu;
-    darkLightMode.ID = "Dark Light";
+    darkLightMode.itemID = MenuItem::ModeDarkLight;
+    darkLightMode.type = ItemType::Label;
+    darkLightMode.text = "Dark Light";
 
     auto& cooperationMode = modeMenu.childs[2];
     cooperationMode.parent = &modeMenu;
-    cooperationMode.ID = "Cooperation";
+    cooperationMode.itemID = MenuItem::ModeCooperation;
+    cooperationMode.type = ItemType::Label;
+    cooperationMode.text = "Cooperation";
 
     auto& versusMode = modeMenu.childs[3];
     versusMode.parent = &modeMenu;
-    versusMode.ID = "Versus";
+    versusMode.itemID = MenuItem::ModeVersus;
+    versusMode.type = ItemType::Label;
+    versusMode.text = "Versus";
 
 
     auto& specialThanks = m_MenuRoot->childs[2];
     specialThanks.parent = m_MenuRoot;
-    specialThanks.ID = "Special Thanks";
+    specialThanks.itemID = MenuItem::SpecialThanks;
+    specialThanks.type = ItemType::Label;
+    specialThanks.text = "Special Thanks";
+    specialThanks.subMenuCount = 1;
+    specialThanks.childs = new MenuConfig[1];
+
+    auto& thanksText = specialThanks.childs[0];
+    thanksText.parent = &specialThanks;
+    thanksText.itemID = MenuItem::SpecialThanksText;
+    thanksText.type = ItemType::Text;
+    thanksText.text = g_SpecialThanksSentence;
 
 
     //初始化
@@ -363,14 +397,16 @@ void TetrisLayer::ShowModeMenu(MenuConfig* menu)
             auto subItem = menu->childs[i];
             auto itemPos = pos;
             itemPos.y += (fontSize * i + spacing * i);
-            if (i == menu->activeIndex)
+
+            if (i == menu->activeIndex && subItem.type == ItemType::Label)
             {
                 ImGui::GetForegroundDrawList()->AddRectFilled({ pos.x, itemPos.y }, { pos.x + (float)width, itemPos.y + fontSize }, Vec4toImU32(m_ActiveMenuItemColor));
                 unsigned int textureID = m_MenuIconTexture->GetTextureID();
                 ImGui::GetForegroundDrawList()->AddImage((void*)textureID, { itemPos.x - fontSize, itemPos.y },
                     { itemPos.x, itemPos.y + fontSize });
             }
-            ImGui::GetForegroundDrawList()->AddText(m_Font, fontSize, itemPos, Vec4toImU32(m_MenuFontColor), subItem.ID.data());
+            ImGui::GetForegroundDrawList()->AddText(m_Font, fontSize, itemPos, Vec4toImU32(m_MenuFontColor),
+                subItem.text.data(), NULL, 600.0f);
         }
     }
 }
@@ -410,7 +446,25 @@ bool TetrisLayer::OnKeyPressed(Hazel::KeyPressedEvent& e)
         if (e.GetKeyCode() == HZ_KEY_ENTER)
         {
             //进入下一级菜单项
-            m_CurrentMenu = &m_CurrentMenu->childs[m_CurrentMenu->activeIndex];
+            MenuConfig* tmpMenu = &m_CurrentMenu->childs[m_CurrentMenu->activeIndex];
+            if (tmpMenu->itemID == MenuItem::Start)
+            {
+                m_Level.Reset();
+                m_State = GameState::Play;
+                return true;
+            }
+
+            if (tmpMenu->subMenuCount > 0)
+            {
+                //m_CurrentMenu = &m_CurrentMenu->childs[m_CurrentMenu->activeIndex];
+                m_CurrentMenu = tmpMenu;
+            }
+            else
+            {
+                //返回上一级
+                if (m_CurrentMenu->parent)
+                    m_CurrentMenu = m_CurrentMenu->parent;
+            }
         }
         else if (e.GetKeyCode() == HZ_KEY_BACKSPACE)
         {

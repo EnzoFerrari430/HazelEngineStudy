@@ -8,6 +8,7 @@
 #include "Level.h"
 
 #include <string_view>
+#include "Menu.h"
 
 template<typename Fn>
 class Timer
@@ -55,7 +56,9 @@ class TetrisLayer : public Hazel::Layer
 
     struct MenuConfig
     {
-        std::string ID;
+        MenuItem itemID;
+        ItemType type;
+        std::string text;
         float fontSize = 48.0f;
         int activeIndex = 0;
         int subMenuCount = 0;;
