@@ -45,7 +45,7 @@ private:
     void InitCooperation();
     void InitVersus();
 private:
-    Hazel::Ref<Hazel::Shader> m_TetrisShader;
+    //Hazel::ShaderLibrary m_ShaderLibrary;
     Hazel::Ref<Hazel::Texture2D> m_TilesTexture;
     Hazel::Ref<Hazel::Texture2D> m_FrameTexture;
     Hazel::Ref<Hazel::Texture2D> m_BackgroundTexture;

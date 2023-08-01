@@ -53,6 +53,8 @@ void Level::Init()
         m_Tiles[i] = Hazel::SubTexture2D::CreateFromCoords(m_TilesTexture, { i * 18.0f, 0.0f }, { 18.0f, 18.0f });
     }
 
+    Hazel::Renderer2D::AddShader("assets/shaders/Normal.glsl");
+    Hazel::Renderer2D::AddShader("assets/shaders/DarkLight.glsl");
 
     m_Players.reserve(2);
     m_Players.push_back(std::make_shared<Player>());
@@ -72,7 +74,6 @@ void Level::Reset()
     m_GameOver = false;
     m_Score = 0;
     memset(field, 0x00, sizeof(field));
-
     switch (m_PlayMode)
     {
     case PlayMode::Normal:

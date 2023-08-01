@@ -32,6 +32,13 @@ namespace Hazel {
         m_Name = filepath.substr(lastSlash, count);
     }
 
+    OpenGLShader::OpenGLShader(const std::string& name, const std::string& shaderSrc)
+        : m_Name(name)
+    {
+        auto shaderSources = PreProcess(shaderSrc);
+        Compile(shaderSources);
+    }
+
     OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc)
         : m_Name(name)
     {

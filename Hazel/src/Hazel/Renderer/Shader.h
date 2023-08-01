@@ -24,6 +24,7 @@ namespace Hazel {
         virtual const std::string& GetName() const = 0;
 
         static Ref<Shader> Create(const std::string& filepath);
+        static Ref<Shader> Create(const std::string& name, const std::string& shaderSrc);
         static Ref<Shader> Create(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc);
     };
 
@@ -34,6 +35,7 @@ namespace Hazel {
         void Add(const Ref<Shader>& shader);
         Ref<Shader> Load(const std::string& filepath);
         Ref<Shader> Load(const std::string& name, const std::string& filepath);
+        Ref<Shader> LoadFromString(const std::string& name, const std::string& shaderSrc);
 
         Ref<Shader> Get(const std::string& name);
 

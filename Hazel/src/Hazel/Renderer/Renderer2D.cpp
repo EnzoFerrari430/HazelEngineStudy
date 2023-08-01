@@ -2,8 +2,9 @@
 #include "Renderer2D.h"
 
 #include "VertexArray.h"
-#include "Shader.h"
 #include "RenderCommand.h"
+
+#include "Hazel/Core/DefaultShaderSource.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -28,8 +29,8 @@ namespace Hazel {
 
         Ref<VertexBuffer> QuadVertexBuffer;
         Ref<VertexArray> QuadVertexArray;
-        Ref<Shader> TextureShader;
-        Ref<Shader> DarkLightShader;
+        ShaderLibrary Renderer2DShaderLibrary;
+        Ref<Shader> CurentShader;
         Ref<Texture2D> WhiteTexture;
 
         uint32_t QuadIndexCount = 0;
@@ -93,10 +94,9 @@ namespace Hazel {
         for (uint32_t i = 0; i < s_Data.MaxTextureSlots; ++i)
             samplers[i] = i;
 
-        s_Data.DarkLightShader = Shader::Create("assets/shaders/DarkLight.glsl");
-        s_Data.TextureShader = Shader::Create("assets/shaders/Texture.glsl");
-        s_Data.TextureShader->Bind();
-        s_Data.TextureShader->SetIntArray("u_Textures", samplers, s_Data.MaxTextureSlots);
+        s_Data.CurentShader = s_Data.Renderer2DShaderLibrary.LoadFromString("DefaultShader", DefaultShaderSource);
+        s_Data.CurentShader->Bind();
+        s_Data.CurentShader->SetIntArray("u_Textures", samplers, s_Data.MaxTextureSlots);
 
         s_Data.TextureSlots[0] = s_Data.WhiteTexture;
 
@@ -119,18 +119,24 @@ namespace Hazel {
         s_Data.TextureSlotIndex = 1;
     }
 
+    void Renderer2D::AddShader(const std::string& filePath)
+    {
+        s_Data.Renderer2DShaderLibrary.Load(filePath);
+    }
+
     void Renderer2D::BeginScene(const OrthographicCamera& camera)
     {
         HZ_PROFILE_FUNCTION();
 
-        s_Data.TextureShader->Bind();
-        s_Data.TextureShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
+        s_Data.CurentShader->Bind();
+        s_Data.CurentShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
 
         s_Data.QuadIndexCount = 0;
         s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
 
         s_Data.TextureSlotIndex = 1;
     }
+
     void Renderer2D::EndScene()
     {
         HZ_PROFILE_FUNCTION();

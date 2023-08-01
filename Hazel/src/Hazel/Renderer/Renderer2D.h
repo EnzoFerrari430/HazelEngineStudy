@@ -5,6 +5,7 @@
 #include "Texture.h"
 #include "SubTexture2D.h"
 
+#include "Shader.h"
 
 
 namespace Hazel {
@@ -14,6 +15,8 @@ namespace Hazel {
     public:
         static void Init();
         static void Shutdown();
+
+        static void AddShader(const std::string& filePath);
 
         static void BeginScene(const OrthographicCamera& camera);
         static void EndScene();

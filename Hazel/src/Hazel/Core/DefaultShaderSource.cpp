@@ -1,3 +1,5 @@
+#include "hzpch.h"
+const char* DefaultShaderSource = R"(
 #type vertex
 #version 330 core
 
@@ -37,6 +39,6 @@ uniform sampler2D u_Textures[32];
 
 void main()
 {
-    //color = texture(u_Textures[int(v_TexIndex)], v_TexCoord * v_TilingFactor) * v_Color;
-    color = vec4(1.0, 1.0, 1.0, 1.0);
+    color = texture(u_Textures[int(v_TexIndex)], v_TexCoord * v_TilingFactor) * v_Color;
 }
+)";
