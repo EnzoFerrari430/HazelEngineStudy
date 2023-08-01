@@ -143,35 +143,16 @@ void TetrisLayer::OnImGuiRender()
         }
         case GameState::MainMenu:
         {
-#if 0
-            // ImU32 col顺序: ABGR
-            auto pos = ImGui::GetWindowPos();
-            auto width = Hazel::Application::Get().GetWindow().GetWidth();
-            auto height = Hazel::Application::Get().GetWindow().GetHeight();
-            pos.x += width * 0.5f - 300.0f;
-            pos.y += 50.0f;
-            if (m_Blink)
-                ImGui::GetForegroundDrawList()->AddText(m_Font, 120.0f, pos, 0xff000000, "Click to Play!");
-
-            pos = ImGui::GetWindowPos();
-            pos.x += width * 0.5f - 300.0f;
-            pos.y -= 90.0f;
-            uint32_t playerScore = m_Level.GetScore();
-            std::string scoreStr = std::string("Score: ") + std::to_string(playerScore);
-            ImGui::GetForegroundDrawList()->AddText(m_Font, 48.0f, pos, 0xffff00ff, scoreStr.c_str());
-            break;
-#endif
-            ShowModeMenu(m_CurrentMenu);
+            ShowMenu(m_CurrentMenu);
             break;
         }
         case GameState::GameOver:
         {
-#if 0
             auto pos = ImGui::GetWindowPos();
             auto width = Hazel::Application::Get().GetWindow().GetWidth();
             auto height = Hazel::Application::Get().GetWindow().GetHeight();
             pos.x += width * 0.5f - 300.0f;
-            pos.y += 50.0f;
+            pos.y += 120.0f;
             if (m_Blink)
             {
                 ImGui::GetForegroundDrawList()->AddText(m_Font, 120.0f, pos, 0xff000000, "GameOver");
@@ -185,35 +166,13 @@ void TetrisLayer::OnImGuiRender()
             uint32_t playerScore = m_Level.GetScore();
             std::string scoreStr = std::string("Score: ") + std::to_string(playerScore);
             ImGui::GetForegroundDrawList()->AddText(m_Font, 48.0f, pos, 0xffff00ff, scoreStr.c_str());
-            break;
-#endif
-            ShowModeMenu(m_CurrentMenu);
+
+            ShowMenu(m_CurrentMenu);
             break;
         }
         case GameState::Pause:
         {
-#if 0
-            auto pos = ImGui::GetWindowPos();
-            auto width = Hazel::Application::Get().GetWindow().GetWidth();
-            auto height = Hazel::Application::Get().GetWindow().GetHeight();
-            pos.x += width * 0.5f - 300.0f;
-            pos.y += 50.0f;
-            //if (m_Blink)
-            {
-                ImGui::GetForegroundDrawList()->AddText(m_Font, 120.0f, pos, 0xff000000, "Press Esc");
-                pos.y += 120.0f;
-                ImGui::GetForegroundDrawList()->AddText(m_Font, 120.0f, pos, 0xff000000, "to Resume");
-            }
-
-            pos = ImGui::GetWindowPos();
-            pos.x += width * 0.5f - 300.0f;
-            pos.y -= 90.0f;
-            uint32_t playerScore = m_Level.GetScore();
-            std::string scoreStr = std::string("Score: ") + std::to_string(playerScore);
-            ImGui::GetForegroundDrawList()->AddText(m_Font, 48.0f, pos, 0xffff00ff, scoreStr.c_str());
-            break;
-#endif
-            ShowModeMenu(m_CurrentMenu);
+            ShowMenu(m_CurrentMenu);
             break;
         }
     }
@@ -257,39 +216,6 @@ void TetrisLayer::OnEvent(Hazel::Event & e)
     Hazel::EventDispatcher dispatcher(e);    
     dispatcher.Dispatch<Hazel::KeyPressedEvent>(HZ_BIND_EVENT_FN(TetrisLayer::OnKeyPressed));
     dispatcher.Dispatch<Hazel::KeyReleasedEvent>(HZ_BIND_EVENT_FN(TetrisLayer::OnKeyReleased));
-}
-
-void TetrisLayer::ShowMenu(GameState state)
-{
-    switch (state)
-    {
-    case GameState::MainMenu:
-    {
-        // ImU32 col顺序: ABGR
-        auto pos = ImGui::GetWindowPos();
-        auto width = Hazel::Application::Get().GetWindow().GetWidth();
-        auto height = Hazel::Application::Get().GetWindow().GetHeight();
-        pos.x += width * 0.5f - 300.0f;
-        pos.y += 50.0f;
-        if (m_Blink)
-            ImGui::GetForegroundDrawList()->AddText(m_Font, 120.0f, pos, 0xff000000, "Click to Play!");
-
-        pos = ImGui::GetWindowPos();
-        pos.x += width * 0.5f - 300.0f;
-        pos.y -= 90.0f;
-        uint32_t playerScore = m_Level.GetScore();
-        std::string scoreStr = std::string("Score: ") + std::to_string(playerScore);
-        ImGui::GetForegroundDrawList()->AddText(m_Font, 48.0f, pos, 0xffff00ff, scoreStr.c_str());
-        break;
-    }
-    case GameState::Pause:
-        break;
-    case GameState::GameOver:
-        break;
-    case GameState::Play:
-    default:
-        break;
-    }
 }
 
 void TetrisLayer::InitMenus()
@@ -373,7 +299,7 @@ void TetrisLayer::DestoryMenus(MenuConfig* menu)
     }
 }
 
-void TetrisLayer::ShowModeMenu(MenuConfig* menu)
+void TetrisLayer::ShowMenu(MenuConfig* menu)
 {
     constexpr float fontSize = 48.0f;
     constexpr float iconSize = 48.0f;
@@ -447,6 +373,13 @@ bool TetrisLayer::OnKeyPressed(Hazel::KeyPressedEvent& e)
         {
             //进入下一级菜单项
             MenuConfig* tmpMenu = &m_CurrentMenu->childs[m_CurrentMenu->activeIndex];
+
+            //选择模式
+            if (m_CurrentMenu->itemID == MenuItem::ModeChoose)
+            {
+                m_Level.SetPlayMode(static_cast<PlayMode>(m_CurrentMenu->activeIndex));
+            }
+
             if (tmpMenu->itemID == MenuItem::Start)
             {
                 m_Level.Reset();

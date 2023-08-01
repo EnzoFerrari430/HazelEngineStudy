@@ -76,24 +76,9 @@ public:
     void OnImGuiRender() override;
     void OnEvent(Hazel::Event& e) override;
 private:
-    /*
-    Play: None
-    MainMenu: ShowMainMenu
-    GameOver: ShowGameOverMenu
-    Pause: ShowPauseMenu
-    */
-    void ShowMenu(GameState state);
-    
-    /*
-    选择模式的菜单
-    普通模式，黑夜模式，合作模式，对抗模式等
-    */
-    void ShowModeMenu();
-    void SpecialThanks();
-
     void InitMenus();
     void DestoryMenus(MenuConfig* menu);
-    void ShowModeMenu(MenuConfig* menu);
+    void ShowMenu(MenuConfig* menu);
 private:
     bool OnKeyPressed(Hazel::KeyPressedEvent& e);
     bool OnKeyReleased(Hazel::KeyReleasedEvent& e);
