@@ -17,8 +17,11 @@ void Sandbox2D::OnAttach()
 {
     m_BoxTexture = Hazel::Texture2D::Create("assets/textures/container.jpg");
     m_SpriteSheet = Hazel::Texture2D::Create("assets/game/textures/spritesheet_tilesPink.png");
+    m_SpriteSheet2 = Hazel::Texture2D::Create("assets/game/textures/RPGpack_sheet_2X.png");
 
-    m_TexturePuzzle = Hazel::SubTexture2D::CreateFromCoords(m_SpriteSheet, { 662.0f, 0.0f }, {148.0f, 148.0f});
+    //m_TexturePuzzle = Hazel::SubTexture2D::CreateFromCoords(m_SpriteSheet, { 662.0f, 0.0f }, {148.0f, 148.0f});
+    m_TexturePuzzle = Hazel::SubTexture2D::CreateFromCoords(m_SpriteSheet, { 0.0f, 0.0f }, {208.0f, 108.0f});
+    m_TextureTree = Hazel::SubTexture2D::CreateFromCoords(m_SpriteSheet2, { 2, 1 }, { 128.0f, 128.0f }, { 1, 2 });
 
     // Init here
     m_Particle.ColorBegin = { 254 / 255.0f, 212 / 255.0f, 123 / 255.0f, 1.0f };
@@ -99,7 +102,8 @@ void Sandbox2D::OnUpdate(Hazel::Timestep ts)
     float spriteSheetHeight = m_SpriteSheet->GetHeight();
     glm::vec2 aspect = { 1.0f, spriteSheetWidth / spriteSheetHeight };
     Hazel::Renderer2D::DrawQuad({ 0.0f, 0.0f, 0.0f }, glm::vec2(1.0f, 1.0f) * aspect, m_SpriteSheet);
-    Hazel::Renderer2D::DrawRotatedQuad({ 1.0f, 0.0f, 0.4f }, glm::vec2(1.0f, 1.0f), glm::radians(rotation), m_TexturePuzzle);
+    Hazel::Renderer2D::DrawRotatedQuad({ 1.0f, 0.0f, 0.4f }, glm::vec2(1.0f, 108.0f / 208.0f), glm::radians(rotation), m_TexturePuzzle);
+    Hazel::Renderer2D::DrawRotatedQuad({ -1.0f, 0.0f, 0.4f }, glm::vec2(1.0f, 2.0f), glm::radians(rotation), m_TextureTree);
     Hazel::Renderer2D::EndScene();
 
     m_ParticleSystem.OnUpdate(ts);

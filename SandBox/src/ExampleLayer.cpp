@@ -202,8 +202,8 @@ void ExampleLayer::OnImGuiRender()
     ImGui::ColorEdit3("Square Color1", glm::value_ptr(m_SquareColor));
     ImGui::End();
 
-    static bool show = true;
-    ImGui::ShowDemoWindow(&show);
+    //static bool show = true;
+    //ImGui::ShowDemoWindow(&show);
 }
 
 void ExampleLayer::OnEvent(Hazel::Event& e)

@@ -27,4 +27,17 @@ namespace Hazel {
         return CreateRef<SubTexture2D>(texture, min, max);
     }
 
+    // ×óÏÂ×ø±ê(0, 0)
+    Ref<SubTexture2D> SubTexture2D::CreateFromCoords(const Ref<Texture2D>& texture, const glm::vec2& coords, const glm::vec2& cellSize, const glm::vec2& spriteSize)
+    {
+        float sheetWidth = texture->GetWidth(), sheetHeight = texture->GetHeight();
+        float spriteWidth = spriteSize.x, spriteHeight = spriteSize.y;
+
+        // min and max  
+        glm::vec2 min = { (coords.x * cellSize.x)/ sheetWidth, (coords.y * cellSize.y) / sheetHeight };
+        glm::vec2 max = { ((coords.x + spriteWidth) * cellSize.x) / sheetWidth, ((coords.y + spriteHeight) * cellSize.y) / sheetHeight };
+
+        return CreateRef<SubTexture2D>(texture, min, max);
+    }
+
 }

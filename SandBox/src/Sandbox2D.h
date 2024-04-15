@@ -60,7 +60,9 @@ private:
     Hazel::Ref<Hazel::VertexArray> m_FlatColorVertexArray;
     Hazel::Ref<Hazel::Texture2D> m_BoxTexture;
     Hazel::Ref<Hazel::Texture2D> m_SpriteSheet;
+    Hazel::Ref<Hazel::Texture2D> m_SpriteSheet2;
     Hazel::Ref<Hazel::SubTexture2D> m_TexturePuzzle;
+    Hazel::Ref<Hazel::SubTexture2D> m_TextureTree;
 
     glm::vec4 m_SquareColor = { 0.2f, 0.3f, 0.8f, 1.0f };
 
