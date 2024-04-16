@@ -56,13 +56,14 @@ public:
 private:
     Hazel::OrthographicCameraController m_CameraController;
 
-    Hazel::Ref<Hazel::Shader> m_FlatColorShader;
-    Hazel::Ref<Hazel::VertexArray> m_FlatColorVertexArray;
     Hazel::Ref<Hazel::Texture2D> m_BoxTexture;
     Hazel::Ref<Hazel::Texture2D> m_SpriteSheet;
-    Hazel::Ref<Hazel::Texture2D> m_SpriteSheet2;
-    Hazel::Ref<Hazel::SubTexture2D> m_TexturePuzzle;
+    Hazel::Ref<Hazel::SubTexture2D> m_TextureStair;
+    Hazel::Ref<Hazel::SubTexture2D> m_TextureBarrel;
     Hazel::Ref<Hazel::SubTexture2D> m_TextureTree;
+
+    int m_MapWidth, m_MapHeight;
+    std::unordered_map<char, Hazel::Ref<Hazel::SubTexture2D>> m_TextureMap;
 
     glm::vec4 m_SquareColor = { 0.2f, 0.3f, 0.8f, 1.0f };
 
