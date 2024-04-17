@@ -61,6 +61,7 @@ private:
     Hazel::Ref<Hazel::SubTexture2D> m_TextureStair;
     Hazel::Ref<Hazel::SubTexture2D> m_TextureBarrel;
     Hazel::Ref<Hazel::SubTexture2D> m_TextureTree;
+    Hazel::Ref<Hazel::Framebuffer> m_Framebuffer;
 
     int m_MapWidth, m_MapHeight;
     std::unordered_map<char, Hazel::Ref<Hazel::SubTexture2D>> m_TextureMap;
