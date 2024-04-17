@@ -110,8 +110,8 @@ project "Hazel"
         optimize "on"
 
 -- Editor
-project "Hazel-Editor"
-    location "Hazel-Editor"
+project "Hazelnut"
+    location "Hazelnut"
     kind "ConsoleApp"
     language "C++"
     cppdialect "C++17"

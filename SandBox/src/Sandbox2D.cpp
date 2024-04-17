@@ -78,7 +78,7 @@ void Sandbox2D::OnUpdate(Hazel::Timestep ts)
 
     {
         HZ_PROFILE_SCOPE("Renderer Prep");
-        m_Framebuffer->Bind();
+        //m_Framebuffer->Bind();
         Hazel::RenderCommand::Clear();
         Hazel::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
     }
@@ -124,7 +124,7 @@ void Sandbox2D::OnUpdate(Hazel::Timestep ts)
     //Hazel::Renderer2D::DrawRotatedQuad({ 1.0f, 0.0f, 0.4f }, glm::vec2(1.0f, 1.0f), glm::radians(rotation), m_TextureBarrel);
     //Hazel::Renderer2D::DrawRotatedQuad({ -1.0f, 0.0f, 0.4f }, glm::vec2(1.0f, 2.0f), glm::radians(rotation), m_TextureTree);
     Hazel::Renderer2D::EndScene();
-    m_Framebuffer->Unbind();
+    //m_Framebuffer->Unbind();
 
 
 }
@@ -133,7 +133,7 @@ void Sandbox2D::OnImGuiRender()
 {
     HZ_PROFILE_FUNCTION();
 
-    static bool dockingEnable = true;
+    static bool dockingEnable = false;
     if (dockingEnable)
     {
 
