@@ -18,11 +18,15 @@ namespace Hazel {
 
         void OnAttach() override;
         void OnDetach() override;
+        void OnEvent(Event& e) override;
         void OnImGuiRender() override;
 
         void Begin();
         void End();
+
+        void SetBlockEvents(bool block) { m_BlockEvents = block; }
     private:
+        bool m_BlockEvents = true;
         float m_Time = 0.0f;
         ImFont* m_DefaultFont;
     };
