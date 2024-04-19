@@ -25,6 +25,8 @@ namespace Hazel {
         HZ_CORE_INFO("  Renderer: {0}", (const char*)glGetString(GL_RENDERER));
         HZ_CORE_INFO("  Version: {0}", (const char*)glGetString(GL_VERSION));
 
+        HZ_CORE_ASSERT(GLVersion.major > 4 || (GLVersion.major == 4 && GLVersion.minor >= 5), "Hazel requires at least OpenGL version 4.5!");
+
         int texture_units = 0;
         glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &texture_units);
         HZ_CORE_INFO("  TextureSlots Limit: {0}", texture_units);

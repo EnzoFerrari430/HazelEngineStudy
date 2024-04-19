@@ -40,6 +40,8 @@ namespace Hazel {
     {
         friend class EventDispatcher;
     public:
+        virtual ~Event() = default;
+
         bool Handled = false;  //是否被处理
 
         virtual EventType GetEventType() const = 0;
