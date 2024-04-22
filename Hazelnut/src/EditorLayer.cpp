@@ -65,6 +65,18 @@ namespace Hazel {
         PROFILE_SCOPE("EditorLayer::OnUpdate");
         HZ_PROFILE_FUNCTION();
 
+        // Resize
+        {
+            Hazel::FramebufferSpecification spec = m_Framebuffer->GetSpecification();
+            if (m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f &&
+                (spec.Width != m_ViewportSize.x || spec.Height != m_ViewportSize.y))
+            {
+                HZ_WARN("Viewport Size: {0}, {1}", m_ViewportSize.x, m_ViewportSize.y);
+                m_Framebuffer->Resize(m_ViewportSize.x, m_ViewportSize.y);
+                m_CameraController.OnResize(m_ViewportSize.x, m_ViewportSize.y);
+            }
+        }
+
         if(m_ViewportFocused)
             m_CameraController.OnUpdate(ts);
 
@@ -204,13 +216,8 @@ namespace Hazel {
         Application::Get().GetImGuiLayer()->SetBlockEvents(!m_ViewportFocused || !m_ViewportHovered);
 
         ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
-        if (m_ViewportSize.x != viewportPanelSize.x || m_ViewportSize.y != viewportPanelSize.y)
-        {
-            HZ_WARN("Viewport Size: {0}, {1}", viewportPanelSize.x, viewportPanelSize.y);
-            m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
-            m_Framebuffer->Resize(m_ViewportSize.x, m_ViewportSize.y);
-            m_CameraController.OnResize(viewportPanelSize.x, viewportPanelSize.y);
-        }
+        m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
+
         uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
         ImGui::Image((void*)textureID, viewportPanelSize);
         ImGui::End();
