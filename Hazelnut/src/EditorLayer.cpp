@@ -6,25 +6,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-static const uint32_t s_MapWidth = 24;
-static const char* s_MapTiles =
-"WWWWWWWWWWWWWWWWWWWWWWWW"
-"WWWDDDDDDDDDDDDDDDWWWWWW"
-"WWDDDDDDDDDDDDDDDDDDDWWW"
-"WWWDDDDDDDDDDDDDDDDDDDWW"
-"WWWWDDDDWWDDDDDDDDDDDDWW"
-"WWWDDDDWWWWDDDDDDDDDDWWW"
-"WWDDDDDWWWDDDDDDDDDDDWWW"
-"WWWWDDDDWDDDDDDDDDDWWWWW"
-"WWWWWWDDDDDDDDDDDDWWWWWW"
-"WWWWWWWDDDDDDDDDDWWWWWWW"
-"WWWWWWWWDDDDDDDWWWWWWWWW"
-"WWWWWWWWWDDDDDWWWWWWWWWW"
-"WWWWWWWWWWDDDWWWWWWWWWWW"
-"WWWWWWWWWWDDWWWWWWWWWWWW"
-"WWWWWWWWWWWWWWWWWWWWWWWW"
-;
-
 namespace Hazel {
 
     EditorLayer::EditorLayer()
@@ -35,24 +16,24 @@ namespace Hazel {
 
     void EditorLayer::OnAttach()
     {
-        m_BoxTexture = Texture2D::Create("assets/textures/container.jpg");
         m_SpriteSheet = Texture2D::Create("assets/game/textures/RPGpack_sheet_2X.png");
 
         m_TextureStair = SubTexture2D::CreateFromCoords(m_SpriteSheet, { 7, 6 }, { 128.0f, 128.0f }, { 1, 1 });
         m_TextureBarrel = SubTexture2D::CreateFromCoords(m_SpriteSheet, { 8, 2 }, { 128.0f, 128.0f }, { 1, 1 });
         m_TextureTree = SubTexture2D::CreateFromCoords(m_SpriteSheet, { 2, 1 }, { 128.0f, 128.0f }, { 1, 2 });
 
-        m_MapWidth = s_MapWidth;
-        m_MapHeight = strlen(s_MapTiles) / s_MapWidth;
-        m_TextureMap['D'] = SubTexture2D::CreateFromCoords(m_SpriteSheet, { 6, 11 }, { 128.0f, 128.0f }, { 1, 1 });
-        m_TextureMap['W'] = SubTexture2D::CreateFromCoords(m_SpriteSheet, { 11, 11 }, { 128.0f, 128.0f }, { 1, 1 });
-
         FramebufferSpecification fbSpec;
         fbSpec.Width = 1280.0f;
         fbSpec.Height = 720.f;
         m_Framebuffer = Framebuffer::Create(fbSpec);
 
-        m_CameraController.SetZoomLevel(5.0f);
+        m_ActiveScene = CreateRef<Scene>();
+
+        auto square = m_ActiveScene->CreateEntity();
+        m_ActiveScene->Reg().emplace<TransformComponent>(square);
+        m_ActiveScene->Reg().emplace<SpriteRendererComponent>(square, glm::vec4{0.0f, 1.0f, 0.0f, 1.0f});
+
+        m_SquareEntity = square;
     }
 
     void EditorLayer::OnDetach()
@@ -67,7 +48,7 @@ namespace Hazel {
 
         // Resize
         {
-            Hazel::FramebufferSpecification spec = m_Framebuffer->GetSpecification();
+            FramebufferSpecification spec = m_Framebuffer->GetSpecification();
             if (m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f &&
                 (spec.Width != m_ViewportSize.x || spec.Height != m_ViewportSize.y))
             {
@@ -81,36 +62,13 @@ namespace Hazel {
             m_CameraController.OnUpdate(ts);
 
         Renderer2D::ResetStats();
+        m_Framebuffer->Bind();
+        RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
+        RenderCommand::Clear();
 
-        {
-            HZ_PROFILE_SCOPE("Renderer Prep");
-            m_Framebuffer->Bind();
-            RenderCommand::Clear();
-            RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
-        }
-
-        static float rotation = 0.0f;
-        rotation += ts * 20.0f;
         Renderer2D::BeginScene(m_CameraController.GetCamera());
-
-        //for (uint32_t y = 0; y < m_MapHeight; ++y)
-        //{
-        //    for (uint32_t x = 0; x < m_MapWidth; ++x)
-        //    {
-        //        char tileType = s_MapTiles[x + y * m_MapWidth];
-        //        Ref<SubTexture2D> texture;
-        //        if (m_TextureMap.find(tileType) != m_TextureMap.end())
-        //            texture = m_TextureMap[tileType];
-        //        else
-        //            texture = m_TextureStair;
-
-        //        Renderer2D::DrawQuad({ x - m_MapWidth / 2.0f, y - m_MapHeight / 2.0f, 0.4f }, glm::vec2(1.0f, 1.0f), texture);
-        //    }
-        //}
-
-        Renderer2D::DrawQuad({ 0.0f, 0.0f, 0.4f }, glm::vec2(1.0f, 1.0f), m_TextureStair);
-        Renderer2D::DrawRotatedQuad({ 1.0f, 0.0f, 0.4f }, glm::vec2(1.0f, 1.0f), glm::radians(rotation), m_TextureBarrel);
-        Renderer2D::DrawRotatedQuad({ -1.0f, 0.0f, 0.4f }, glm::vec2(1.0f, 2.0f), glm::radians(rotation), m_TextureTree);
+        // update scene
+        m_ActiveScene->OnUpdate(ts);
         Renderer2D::EndScene();
         m_Framebuffer->Unbind();
 
@@ -178,7 +136,7 @@ namespace Hazel {
             {
                 if (ImGui::MenuItem("Close", NULL, false))
                 {
-                    Hazel::Application::Get().Close();
+                    Application::Get().Close();
                     dockSpaceOpen = false;
                 }
                 ImGui::EndMenu();
@@ -190,7 +148,7 @@ namespace Hazel {
 
         ImGui::Begin("Settings");
 
-        auto stats = Hazel::Renderer2D::GetStats();
+        auto stats = Renderer2D::GetStats();
         ImGui::Text("Renderer2D Stats:");
         ImGui::Text("Draw Calls: %d", stats.DrawCalls);
         ImGui::Text("Quads: %d", stats.QuadCount);
@@ -205,8 +163,8 @@ namespace Hazel {
             ImGui::Text(label, 1000 / result.Time);
         }
         m_ProfileResults.clear();
-
-        ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SquareColor));
+        auto& squareColor = m_ActiveScene->Reg().get<SpriteRendererComponent>(m_SquareEntity).Color;
+        ImGui::ColorEdit4("Square Color", glm::value_ptr(squareColor));
         ImGui::End();
 
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });

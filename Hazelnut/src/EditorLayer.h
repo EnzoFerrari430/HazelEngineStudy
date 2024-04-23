@@ -56,17 +56,14 @@ namespace Hazel {
     private:
         OrthographicCameraController m_CameraController;
 
-        Ref<Texture2D> m_BoxTexture;
         Ref<Texture2D> m_SpriteSheet;
         Ref<SubTexture2D> m_TextureStair;
         Ref<SubTexture2D> m_TextureBarrel;
         Ref<SubTexture2D> m_TextureTree;
         Ref<Framebuffer> m_Framebuffer;
 
-        int m_MapWidth, m_MapHeight;
-        std::unordered_map<char, Ref<SubTexture2D>> m_TextureMap;
-
-        glm::vec4 m_SquareColor = { 0.2f, 0.3f, 0.8f, 1.0f };
+        Ref<Scene> m_ActiveScene;
+        entt::entity m_SquareEntity;
 
         bool m_ViewportFocused = false, m_ViewportHovered = false;
         glm::vec2 m_ViewportSize = { 0.0f, 0.0f };
