@@ -29,9 +29,8 @@ namespace Hazel {
 
         m_ActiveScene = CreateRef<Scene>();
 
-        auto square = m_ActiveScene->CreateEntity();
-        m_ActiveScene->Reg().emplace<TransformComponent>(square);
-        m_ActiveScene->Reg().emplace<SpriteRendererComponent>(square, glm::vec4{0.0f, 1.0f, 0.0f, 1.0f});
+        auto square = m_ActiveScene->CreateEntity("Green Square");
+        square.AddComponent<SpriteRendererComponent>(glm::vec4{0.0f, 1.0f, 0.0f, 1.0f});
 
         m_SquareEntity = square;
     }
@@ -163,8 +162,14 @@ namespace Hazel {
             ImGui::Text(label, 1000 / result.Time);
         }
         m_ProfileResults.clear();
-        auto& squareColor = m_ActiveScene->Reg().get<SpriteRendererComponent>(m_SquareEntity).Color;
-        ImGui::ColorEdit4("Square Color", glm::value_ptr(squareColor));
+
+        if (m_SquareEntity)
+        {
+            ImGui::Separator();
+            ImGui::Text("%s", m_SquareEntity.GetComponent<TagComponent>().Tag.c_str());
+            auto& squareColor = m_SquareEntity.GetComponent<SpriteRendererComponent>().Color;
+            ImGui::ColorEdit4("Square Color", glm::value_ptr(squareColor));
+        }
         ImGui::End();
 
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
