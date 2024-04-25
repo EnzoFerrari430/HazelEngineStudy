@@ -37,7 +37,7 @@ private:
     Fn m_Func;
 };
 
-#define PROFILE_SCOPE(name) Timer timer##__LINE__(name, [&](ProfileResult profileResult) {m_ProfileResults.push_back(profileResult); })
+#define PROFILE_SCOPE(name) Timer scopeTimer##__LINE__(name, [&](ProfileResult profileResult) {m_ProfileResults.push_back(profileResult); })
 
 namespace Hazel {
 
