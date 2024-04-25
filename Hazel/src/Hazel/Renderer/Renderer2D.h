@@ -7,6 +7,7 @@
 
 #include "Shader.h"
 
+#include "Camera.h"
 
 namespace Hazel {
 
@@ -18,7 +19,8 @@ namespace Hazel {
 
         static void AddShader(const std::string& filePath);
 
-        static void BeginScene(const OrthographicCamera& camera);
+        static void BeginScene(const Camera& camera, const glm::mat4& transform);
+        static void BeginScene(const OrthographicCamera& camera); // TODO: remove
         static void EndScene();
         static void Flush();
 
