@@ -36,10 +36,10 @@ namespace Hazel {
 
 
         m_CameraEntity = m_ActiveScene->CreateEntity("Camera Entity");
-        m_CameraEntity.AddComponent<CameraComponent>(glm::ortho(-16.0f, 16.0f, -9.0f, 9.0f, -1.0f, 1.0f));
+        m_CameraEntity.AddComponent<CameraComponent>();
 
         m_SecondCamera = m_ActiveScene->CreateEntity("Clip-Space Entity");
-        auto& cc = m_SecondCamera.AddComponent<CameraComponent>(glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f));
+        auto& cc = m_SecondCamera.AddComponent<CameraComponent>();
         cc.Primary = false;
     }
 
@@ -62,6 +62,8 @@ namespace Hazel {
                 HZ_WARN("Viewport Size: {0}, {1}", m_ViewportSize.x, m_ViewportSize.y);
                 m_Framebuffer->Resize(m_ViewportSize.x, m_ViewportSize.y);
                 m_CameraController.OnResize(m_ViewportSize.x, m_ViewportSize.y);
+
+                m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
             }
         }
 
@@ -185,6 +187,16 @@ namespace Hazel {
         {
             m_CameraEntity.GetComponent<CameraComponent>().Primary = m_PrimaryCamera;
             m_SecondCamera.GetComponent<CameraComponent>().Primary = !m_PrimaryCamera;
+        }
+
+        {
+            auto& camera = m_SecondCamera.GetComponent<CameraComponent>().Camera;
+            float orthographicSize = camera.GetOrthographicSize();
+            if (ImGui::DragFloat("Second Camera Ortho Size", &orthographicSize))
+            {
+                camera.SetOrthographicSize(orthographicSize);
+            }
+
         }
 
         ImGui::End();
