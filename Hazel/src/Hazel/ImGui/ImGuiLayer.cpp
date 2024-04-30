@@ -114,8 +114,8 @@ namespace Hazel {
     void ImGuiLayer::OnImGuiRender()
     {
         //ImGui::PushFont(m_DefaultFont);
-        //static bool show = true;
-        //ImGui::ShowDemoWindow(&show);
+        static bool show = true;
+        ImGui::ShowDemoWindow(&show);
         //ImGui::PopFont();
     }
 
