@@ -83,9 +83,12 @@ void Sandbox2D::OnUpdate(Hazel::Timestep ts)
         Hazel::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
     }
 
-    if (Hazel::Input::IsMouseButtonPressed(HZ_MOUSE_BUTTON_LEFT))
+    if (Hazel::Input::IsMouseButtonPressed(Hazel::Mouse::ButtonLeft))
     {
-        auto[x, y] = Hazel::Input::GetMousePosition();
+        float x, y;
+        glm::vec2 position = Hazel::Input::GetMousePosition();
+        x = position.x;
+        y = position.y;
         auto width = Hazel::Application::Get().GetWindow().GetWidth();
         auto height = Hazel::Application::Get().GetWindow().GetHeight();
 

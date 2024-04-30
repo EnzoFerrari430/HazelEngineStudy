@@ -98,7 +98,7 @@ void Level::OnUpdate(Hazel::Timestep ts)
     m_DXTime += ts;
     //if (m_DeltaTime > m_Delay)
     {
-        if (Hazel::Input::IsKeyPressed(HZ_KEY_UP))
+        if (Hazel::Input::IsKeyPressed(Hazel::Key::Up))
         {
             m_Rotate = true;
         }
@@ -108,12 +108,12 @@ void Level::OnUpdate(Hazel::Timestep ts)
             m_Rotated = false;
         }
         m_DX = 0;
-        if (Hazel::Input::IsKeyPressed(HZ_KEY_LEFT))
+        if (Hazel::Input::IsKeyPressed(Hazel::Key::Left))
         {
             m_CurrentMove = MoveDirection::Left;
             m_DX = -1;
         }
-        else if (Hazel::Input::IsKeyPressed(HZ_KEY_RIGHT))
+        else if (Hazel::Input::IsKeyPressed(Hazel::Key::Right))
         {
             m_CurrentMove = MoveDirection::Right;
             m_DX = 1;
@@ -124,7 +124,7 @@ void Level::OnUpdate(Hazel::Timestep ts)
             m_DXDelay = 0.15f;
         }
 
-        if (Hazel::Input::IsKeyPressed(HZ_KEY_DOWN))
+        if (Hazel::Input::IsKeyPressed(Hazel::Key::Down))
             m_FallDelay = 0.05f;
         else
             m_FallDelay = 0.3f;
@@ -292,15 +292,15 @@ void Level::GameOver()
 
 bool Level::OnKeyPressed(Hazel::KeyPressedEvent& e)
 {
-    if (e.GetKeyCode() == HZ_KEY_UP)
+    if (e.GetKeyCode() == Hazel::Key::Up)
     {
         m_Rotate = true;
     }
-    if (e.GetKeyCode() == HZ_KEY_LEFT)
+    if (e.GetKeyCode() == Hazel::Key::Left)
     {
         m_DX = -1;
     }
-    else if (e.GetKeyCode() == HZ_KEY_RIGHT)
+    else if (e.GetKeyCode() == Hazel::Key::Right)
     {
         m_DX = 1;
     }
@@ -309,15 +309,15 @@ bool Level::OnKeyPressed(Hazel::KeyPressedEvent& e)
 
 bool Level::OnKeyReleased(Hazel::KeyReleasedEvent& e)
 {
-    if (e.GetKeyCode() == HZ_KEY_UP)
+    if (e.GetKeyCode() == Hazel::Key::Up)
     {
         m_Rotate = false;
     }
-    if (e.GetKeyCode() == HZ_KEY_LEFT)
+    if (e.GetKeyCode() == Hazel::Key::Left)
     {
         m_DX = 0;
     }
-    else if (e.GetKeyCode() == HZ_KEY_RIGHT)
+    else if (e.GetKeyCode() == Hazel::Key::Right)
     {
         m_DX = 0;
     }

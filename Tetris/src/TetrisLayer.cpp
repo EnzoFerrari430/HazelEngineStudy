@@ -360,16 +360,16 @@ bool TetrisLayer::OnKeyPressed(Hazel::KeyPressedEvent& e)
     case GameState::MainMenu:
     case GameState::Pause:
     case GameState::GameOver:
-        if (e.GetKeyCode() == HZ_KEY_DOWN && (m_CurrentMenu->activeIndex + 1 < m_CurrentMenu->subMenuCount))
+        if (e.GetKeyCode() == Hazel::Key::Down && (m_CurrentMenu->activeIndex + 1 < m_CurrentMenu->subMenuCount))
         {
             ++m_CurrentMenu->activeIndex;
         }
-        else if (e.GetKeyCode() == HZ_KEY_UP && (m_CurrentMenu->activeIndex > 0))
+        else if (e.GetKeyCode() == Hazel::Key::Up && (m_CurrentMenu->activeIndex > 0))
         {
             --m_CurrentMenu->activeIndex;
         }
 
-        if (e.GetKeyCode() == HZ_KEY_ENTER)
+        if (e.GetKeyCode() == Hazel::Key::Enter)
         {
             //进入下一级菜单项
             MenuConfig* tmpMenu = &m_CurrentMenu->childs[m_CurrentMenu->activeIndex];
@@ -399,7 +399,7 @@ bool TetrisLayer::OnKeyPressed(Hazel::KeyPressedEvent& e)
                     m_CurrentMenu = m_CurrentMenu->parent;
             }
         }
-        else if (e.GetKeyCode() == HZ_KEY_BACKSPACE)
+        else if (e.GetKeyCode() == Hazel::Key::Backspace)
         {
             //返回上一级
             if(m_CurrentMenu->parent)
@@ -408,7 +408,7 @@ bool TetrisLayer::OnKeyPressed(Hazel::KeyPressedEvent& e)
         }
         break;
     case GameState::Play:
-        if (e.GetKeyCode() == HZ_KEY_ESCAPE)
+        if (e.GetKeyCode() == Hazel::Key::Escape)
             m_State = GameState::Pause;
         break;
     }

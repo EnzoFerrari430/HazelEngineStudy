@@ -305,7 +305,7 @@ namespace Hazel {
         float textureIndex = 0.0f;
         for (uint32_t i = 1; i < s_Data.TextureSlotIndex; ++i)
         {
-            if (s_Data.TextureSlots[i]->operator==(*texture.get()))
+            if (*s_Data.TextureSlots[i] == *texture)
             {
                 textureIndex = (float)i;
                 break;

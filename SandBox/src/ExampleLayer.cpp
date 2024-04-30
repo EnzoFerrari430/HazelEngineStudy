@@ -145,14 +145,14 @@ void ExampleLayer::OnUpdate(Hazel::Timestep ts)
 {
     m_CameraController.OnUpdate(ts);
 
-    if (Hazel::Input::IsKeyPressed(HZ_KEY_J))
+    if (Hazel::Input::IsKeyPressed(Hazel::Key::J))
         m_SquarePosition.x -= m_SquareMoveSpeed * ts;
-    else if (Hazel::Input::IsKeyPressed(HZ_KEY_L))
+    else if (Hazel::Input::IsKeyPressed(Hazel::Key::L))
         m_SquarePosition.x += m_SquareMoveSpeed * ts;
 
-    if (Hazel::Input::IsKeyPressed(HZ_KEY_I))
+    if (Hazel::Input::IsKeyPressed(Hazel::Key::I))
         m_SquarePosition.y += m_SquareMoveSpeed * ts;
-    else if (Hazel::Input::IsKeyPressed(HZ_KEY_K))
+    else if (Hazel::Input::IsKeyPressed(Hazel::Key::K))
         m_SquarePosition.y -= m_SquareMoveSpeed * ts;
 
 
