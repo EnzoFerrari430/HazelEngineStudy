@@ -35,15 +35,11 @@ namespace Hazel {
         auto redSquare = m_ActiveScene->CreateEntity("Red Square");
         redSquare.AddComponent<SpriteRendererComponent>(glm::vec4{ 1.0f, 0.0f, 0.0f, 1.0f });
 
+        Entity cameraA = m_ActiveScene->CreateEntity("Camera A");
+        cameraA.AddComponent<CameraComponent>();
 
-        m_SquareEntity = square;
-
-
-        m_CameraEntity = m_ActiveScene->CreateEntity("Camera Entity");
-        m_CameraEntity.AddComponent<CameraComponent>();
-
-        m_SecondCamera = m_ActiveScene->CreateEntity("Clip-Space Entity");
-        auto& cc = m_SecondCamera.AddComponent<CameraComponent>();
+        Entity cameraB = m_ActiveScene->CreateEntity("Camera B");
+        auto& cc = cameraB.AddComponent<CameraComponent>();
         cc.Primary = false;
 
 
@@ -77,7 +73,7 @@ namespace Hazel {
             }
         };
 
-        m_CameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
+        cameraA.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 
         m_SceneHierarchyPanel.SetContext(m_ActiveScene);
 
@@ -194,7 +190,7 @@ namespace Hazel {
 
         m_SceneHierarchyPanel.OnImGuiRender();
 
-        ImGui::Begin("Settings");
+        ImGui::Begin("Stats");
 
         auto stats = Renderer2D::GetStats();
         ImGui::Text("Renderer2D Stats:");
@@ -206,39 +202,11 @@ namespace Hazel {
         for (auto& result : m_ProfileResults)
         {
             char label[50];
-            strcpy(label, "%.01f FPS ");
-            strcat(label, result.Name);
+            strcpy_s(label, 50, "%.01f FPS ");
+            strcat_s(label, 50, result.Name);
             ImGui::Text(label, 1000 / result.Time);
         }
         m_ProfileResults.clear();
-
-        if (m_SquareEntity)
-        {
-            ImGui::Separator();
-            ImGui::Text("%s", m_SquareEntity.GetComponent<TagComponent>().Tag.c_str());
-            auto& squareColor = m_SquareEntity.GetComponent<SpriteRendererComponent>().Color;
-            ImGui::ColorEdit4("Square Color", glm::value_ptr(squareColor));
-        }
-
-        // 最后一列控制位移
-        ImGui::DragFloat3("Camera Transform",
-            glm::value_ptr(m_CameraEntity.GetComponent<TransformComponent>().Transform[3]));
-
-        if (ImGui::Checkbox("Camera A", &m_PrimaryCamera))
-        {
-            m_CameraEntity.GetComponent<CameraComponent>().Primary = m_PrimaryCamera;
-            m_SecondCamera.GetComponent<CameraComponent>().Primary = !m_PrimaryCamera;
-        }
-
-        {
-            auto& camera = m_SecondCamera.GetComponent<CameraComponent>().Camera;
-            float orthographicSize = camera.GetOrthographicSize();
-            if (ImGui::DragFloat("Second Camera Ortho Size", &orthographicSize))
-            {
-                camera.SetOrthographicSize(orthographicSize);
-            }
-
-        }
 
         ImGui::End();
 
