@@ -25,7 +25,8 @@ project "Hazel"
     defines
     {
         "_CRT_SECURE_NO_WARNINGS",
-        "GLFW_INCLUDE_NONE" --glfw不包含gl头文件，让glad去包含gl头文件
+        "GLFW_INCLUDE_NONE", --glfw不包含gl头文件，让glad去包含gl头文件
+        "YAML_CPP_STATIC_DEFINE"
     }
 
     includedirs
@@ -37,7 +38,8 @@ project "Hazel"
         "%{IncludeDir.ImGui}",
         "%{IncludeDir.glm}",
         "%{IncludeDir.stb_image}",
-        "%{IncludeDir.entt}"
+        "%{IncludeDir.entt}",
+        "%{IncludeDir.yaml_cpp}"
     }
     -- Hazel需要链接的库
     links
@@ -45,6 +47,7 @@ project "Hazel"
         "GLFW",
         "Glad",
         "ImGui",
+        "yaml-cpp",
         "opengl32.lib"
     }
 

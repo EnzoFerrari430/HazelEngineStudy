@@ -10,3 +10,6 @@
 [submodule "HazelAudio"]
 	path = HazelAudio
 	url = https://github.com/EnzoFerrari430/HazelAudio.git
+[submodule "Hazel/vendor/yaml-cpp"]
+	path = Hazel/vendor/yaml-cpp
+	url = https://github.com/EnzoFerrari430/yaml-cpp.git
