@@ -20,6 +20,9 @@ project "Hazel"
         "vendor/stb_image/**.cpp",
         "vendor/glm/glm/**.hpp",
         "vendor/glm/glm/**.inl",
+
+        "vendor/ImGuizmo/ImGuizmo.h",
+        "vendor/ImGuizmo/ImGuizmo.cpp"
     }
 
     defines
@@ -39,7 +42,8 @@ project "Hazel"
         "%{IncludeDir.glm}",
         "%{IncludeDir.stb_image}",
         "%{IncludeDir.entt}",
-        "%{IncludeDir.yaml_cpp}"
+        "%{IncludeDir.yaml_cpp}",
+        "%{IncludeDir.ImGuizmo}"
     }
     -- Hazel需要链接的库
     links
@@ -50,6 +54,9 @@ project "Hazel"
         "yaml-cpp",
         "opengl32.lib"
     }
+
+    filter "files:vendor/ImGuizmo/**.cpp"
+    flags { "NoPCH" }
 
     filter "system:windows"
         systemversion "latest"
