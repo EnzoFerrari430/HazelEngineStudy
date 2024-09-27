@@ -31,6 +31,7 @@ namespace Hazel {
         m_TextureTree = SubTexture2D::CreateFromCoords(m_SpriteSheet, { 2, 1 }, { 128.0f, 128.0f }, { 1, 2 });
 
         FramebufferSpecification fbSpec;
+        fbSpec.Attachments = { FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::Depth };
         fbSpec.Width = 1280.0f;
         fbSpec.Height = 720.f;
         m_Framebuffer = Framebuffer::Create(fbSpec);
@@ -248,7 +249,7 @@ namespace Hazel {
         m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
 
         // x64平台 指针是64位
-        uint64_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
+        uint64_t textureID = m_Framebuffer->GetColorAttachmentRendererID(1);
         ImGui::Image(reinterpret_cast<void*>(textureID), viewportPanelSize, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 
         // Gizmos
