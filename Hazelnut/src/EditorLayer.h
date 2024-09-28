@@ -73,6 +73,7 @@ namespace Hazel {
         Ref<Framebuffer> m_Framebuffer;
 
         Ref<Scene> m_ActiveScene;
+        Entity m_HoveredEntity;
 
         bool m_PrimaryCamera = true;
 

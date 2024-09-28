@@ -14,7 +14,7 @@ out vec2 v_TexCoord;
 out vec4 v_Color;
 out flat float v_TexIndex;
 out float v_TilingFactor;
-out int v_EntityID;
+out flat int v_EntityID;
 
 void main()
 {
@@ -84,5 +84,5 @@ void main()
     }
     color = texColor;
 
-    color2 = v_EntityID; // placeholder for our entity ID
+    color2 = v_EntityID;
 }
