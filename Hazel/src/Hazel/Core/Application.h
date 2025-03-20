@@ -13,6 +13,18 @@
 int main(int argc, char** argv);
 
 namespace Hazel {
+
+    struct ApplicationCommandLineArgs
+    {
+        int Count = 0;
+        char** Args = nullptr;
+
+        const char* operator[](int index) const
+        {
+            HZ_CORE_ASSERT(index < Count);
+            return Args[index];
+        }
+    };
     
     /*
         Application用于收集事件(event)，并转发给layer
@@ -20,7 +32,7 @@ namespace Hazel {
     class HAZEL_API Application
     {
     public:
-        Application(const std::string& name = "Hazel Engine");
+        Application(const std::string& name = "Hazel App", ApplicationCommandLineArgs args = ApplicationCommandLineArgs());
         virtual ~Application();
 
         void OnEvent(Event& event);
@@ -29,6 +41,8 @@ namespace Hazel {
         void PushOverlay(Layer* layer);
 
         inline static Application& Get() { return *s_Instance; }
+        ApplicationCommandLineArgs GetCommandLineArgs() const { return m_CommandLineArgs; }
+
         inline Window& GetWindow() { return *m_Window; }
 
         void Close() { m_Running = false; }
@@ -39,6 +53,7 @@ namespace Hazel {
         bool OnWindowClose(WindowCloseEvent& e);
         bool OnWindowResize(WindowResizeEvent& e);
     private:
+        ApplicationCommandLineArgs m_CommandLineArgs;
         Scope<Window> m_Window;
         ImGuiLayer* m_ImGuiLayer;
         bool m_Running = true;
@@ -51,7 +66,7 @@ namespace Hazel {
     };
 
     //To be defined in CLIENT
-    Application* CreateApplication();
+    Application* CreateApplication(ApplicationCommandLineArgs args);
 
 }
 

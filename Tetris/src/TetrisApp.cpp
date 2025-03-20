@@ -7,7 +7,8 @@
 class SandBox : public Hazel::Application
 {
 public:
-    SandBox()
+    SandBox(Hazel::ApplicationCommandLineArgs args)
+        : Application("Tetris", args)
     {
         Hazel::Audio::Init();
 
@@ -23,7 +24,7 @@ public:
     }
 };
 
-Hazel::Application* Hazel::CreateApplication()
+Hazel::Application* Hazel::CreateApplication(ApplicationCommandLineArgs args)
 {
-    return new SandBox();
+    return new SandBox(args);
 }

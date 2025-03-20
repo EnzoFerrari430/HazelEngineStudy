@@ -17,18 +17,6 @@ namespace Hazel {
         return nullptr;
     }
 
-    Ref<Shader> Shader::Create(const std::string& name, const std::string& shaderSrc)
-    {
-        switch (Renderer::GetAPI())
-        {
-        case RendererAPI::API::None:     HZ_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
-        case RendererAPI::API::OpenGL:   return std::make_shared<OpenGLShader>(name, shaderSrc);
-        }
-
-        HZ_CORE_ASSERT(false, "Unknown RendererAPI!");
-        return nullptr;
-    }
-
     Ref<Shader> Shader::Create(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc)
     {
         switch (Renderer::GetAPI())
@@ -63,13 +51,6 @@ namespace Hazel {
     Ref<Shader> ShaderLibrary::Load(const std::string& name, const std::string& filepath)
     {
         auto shader = Shader::Create(filepath);
-        Add(name, shader);
-        return shader;
-    }
-
-    Ref<Shader> ShaderLibrary::LoadFromString(const std::string& name, const std::string& shaderSrc)
-    {
-        auto shader = Shader::Create(name, shaderSrc);
         Add(name, shader);
         return shader;
     }
