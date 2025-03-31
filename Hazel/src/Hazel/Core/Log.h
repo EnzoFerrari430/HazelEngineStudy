@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core.h"
+#include "Base.h"
 
 // This ignores all warnings raised inside External headers
 #pragma warning(push, 0)
