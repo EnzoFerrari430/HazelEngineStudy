@@ -1,4 +1,4 @@
-#type vertex
+ï»¿#type vertex
 #version 450 core
 
 layout(location = 0) in vec3 a_Position;
@@ -57,7 +57,7 @@ layout(binding=0) uniform sampler2D u_Textures[32];
 
 void main()
 {
-    //²»Í¬ÏÔ¿¨(AMD)ÓĞ¿ÉÄÜ²»Ö§³ÖÏÂÁĞĞ´·¨
+    //ä¸åŒæ˜¾å¡(AMD)æœ‰å¯èƒ½ä¸æ”¯æŒä¸‹åˆ—å†™æ³•
     //color = texture(u_Textures[int(v_TexIndex)], v_TexCoord * v_TilingFactor) * v_Color;
 
     vec4 texColor = Input.Color;
