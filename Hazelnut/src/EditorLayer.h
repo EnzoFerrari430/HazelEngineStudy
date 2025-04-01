@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <Hazel.h>
 
@@ -64,6 +64,7 @@ namespace Hazel {
 
         void NewScene();
         void OpenScene();
+        void OpenScene(const std::filesystem::path& path);
         void SaveSceneAs();
     private:
         OrthographicCameraController m_CameraController;
@@ -83,7 +84,7 @@ namespace Hazel {
 
         bool m_ViewportFocused = false, m_ViewportHovered = false;
         glm::vec2 m_ViewportSize = { 0.0f, 0.0f };
-        glm::vec2 m_ViewportBounds[2]; //»ùÓÚÆÁÄ»×ø±êÏµµÄviewportÇøÓò
+        glm::vec2 m_ViewportBounds[2]; //åŸºäºå±å¹•åæ ‡ç³»çš„viewportåŒºåŸŸ
 
         int m_GizmoType = -1;
 

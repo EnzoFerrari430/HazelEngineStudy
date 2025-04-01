@@ -1,4 +1,4 @@
-#include "hzpch.h"
+ï»¿#include "hzpch.h"
 #include "EditorLayer.h"
 
 #include <ImGui/imgui.h>
@@ -15,6 +15,8 @@
 #include "Hazel/Math/Math.h"
 
 namespace Hazel {
+
+    extern const std::filesystem::path g_AssetPath;
 
     EditorLayer::EditorLayer()
         : Layer("EditorLayer"), m_CameraController(1280.0f / 720.0f, true)
@@ -150,7 +152,7 @@ namespace Hazel {
         mx -= m_ViewportBounds[0].x;
         my -= m_ViewportBounds[0].y;
         glm::vec2 viewportSize = m_ViewportBounds[1] - m_ViewportBounds[0];
-        my = viewportSize.y - my; //OpenGLµÄ×ø±êÏµ(0, 0)ÔÚ×óÏÂ½Ç Òª·­×ªy×ø±ê
+        my = viewportSize.y - my; //OpenGLçš„åæ ‡ç³»(0, 0)åœ¨å·¦ä¸‹è§’ è¦ç¿»è½¬yåæ ‡
         int mouseX = (int)mx;
         int mouseY = (int)my;
         if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y)
@@ -213,7 +215,7 @@ namespace Hazel {
         ImGuiIO& io = ImGui::GetIO();
         ImGuiStyle& style = ImGui::GetStyle();
         float minWinSizeX = style.WindowMinSize.x;
-        style.WindowMinSize.x = 370.0f; //ÉèÖÃdocking´°¿ÚË®Æ½×îĞ¡¿í¶È
+        style.WindowMinSize.x = 370.0f; //è®¾ç½®dockingçª—å£æ°´å¹³æœ€å°å®½åº¦
         if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
         {
             ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
@@ -272,13 +274,15 @@ namespace Hazel {
 
         ImGui::End();
 
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
         ImGui::Begin("Viewport");
         auto viewportMinRegion = ImGui::GetWindowContentRegionMin();
         auto viewportMaxRegion = ImGui::GetWindowContentRegionMax();
         auto viewportOffset = ImGui::GetWindowPos();
         m_ViewportBounds[0] = { viewportMinRegion.x + viewportOffset.x, viewportMinRegion.y + viewportOffset.y };
         m_ViewportBounds[1] = { viewportMaxRegion.x + viewportOffset.x, viewportMaxRegion.y + viewportOffset.y };
+        //HZ_CORE_WARN("Min Bounds = {0}, {1}", m_ViewportBounds[0].x, m_ViewportBounds[0].y);
+        //HZ_CORE_WARN("Max Bounds = {0}, {1}", m_ViewportBounds[1].x, m_ViewportBounds[1].y);
 
         m_ViewportFocused = ImGui::IsWindowFocused();
         m_ViewportHovered = ImGui::IsWindowHovered();
@@ -287,12 +291,21 @@ namespace Hazel {
         ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
         m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
 
-        // x64Æ½Ì¨ Ö¸ÕëÊÇ64Î»
+        // x64å¹³å° æŒ‡é’ˆæ˜¯64ä½
         uint64_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
         ImGui::Image(reinterpret_cast<void*>(textureID), viewportPanelSize, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 
-        //HZ_CORE_WARN("Min Bounds = {0}, {1}", m_ViewportBounds[0].x, m_ViewportBounds[0].y);
-        //HZ_CORE_WARN("Max Bounds = {0}, {1}", m_ViewportBounds[1].x, m_ViewportBounds[1].y);
+        // ImGuiå¯ç”¨æ‹–æ”¾ç›®æ ‡
+        if (ImGui::BeginDragDropTarget())
+        {
+            // TODO: éœ€è¦è§£å†³è¿™é‡Œæ‹–æ”¾ä¸æ˜¾ç¤ºç›®æ ‡çš„çŸ©å½¢æ¡†
+            if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+            {
+                const wchar_t* path = (const wchar_t*)payload->Data;
+                OpenScene(std::filesystem::path(g_AssetPath) / path);
+            }
+            ImGui::EndDragDropTarget();
+        }
 
 
         // Gizmos
@@ -305,7 +318,7 @@ namespace Hazel {
             ImGuizmo::SetRect(m_ViewportBounds[0].x, m_ViewportBounds[0].y, m_ViewportBounds[1].x - m_ViewportBounds[0].x, m_ViewportBounds[1].y - m_ViewportBounds[0].y);
 
             // Runtime camera for entity
-            // ÒÔºó»áÓÃµ½Ëü
+            // ä»¥åä¼šç”¨åˆ°å®ƒ
             //auto cameraEntity = m_ActiveScene->GetPrimaryCameraEntity();
             //const auto& camera = cameraEntity.GetComponent<CameraComponent>().Camera;
             //const glm::mat4& cameraProjection = camera.GetProjection();
@@ -336,7 +349,7 @@ namespace Hazel {
                 glm::vec3 translation, rotation, scale;
                 Math::DecomposeTransform(transform, translation, rotation, scale);
 
-                // Ğı×ª¿ÉÒÔÍ¨¹ıÔö¼ÓÒ»¸ödeltaÖµ ´Ó¶ø±ÜÃâÍòÏò½ÚËÀËø
+                // æ—‹è½¬å¯ä»¥é€šè¿‡å¢åŠ ä¸€ä¸ªdeltaå€¼ ä»è€Œé¿å…ä¸‡å‘èŠ‚æ­»é”
                 glm::vec3 deltaRotation = rotation - tc.Rotation;
                 tc.Translation = glm::vec3(transform[3]);
                 tc.Rotation += deltaRotation;
@@ -429,14 +442,17 @@ namespace Hazel {
     {
         std::string filepath = FileDialogs::OpenFile("Hazel Scene (*.hazel)\0*.hazel\0");
         if (!filepath.empty())
-        {
-            m_ActiveScene = CreateRef<Scene>();
-            m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-            m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+            OpenScene(filepath);
+    }
 
-            SceneSerializer serializer(m_ActiveScene);
-            serializer.Deserialize(filepath);
-        }
+    void EditorLayer::OpenScene(const std::filesystem::path& path)
+    {
+        m_ActiveScene = CreateRef<Scene>();
+        m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+        m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+
+        SceneSerializer serializer(m_ActiveScene);
+        serializer.Deserialize(path.string());
     }
 
     void EditorLayer::SaveSceneAs()
