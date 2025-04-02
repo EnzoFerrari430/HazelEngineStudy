@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Hazel/Core/Base.h"
 #include "Hazel/Scene/Scene.h"

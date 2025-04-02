@@ -1,7 +1,8 @@
-#include "hzpch.h"
+ï»¿#include "hzpch.h"
 #include "SceneHierarchyPanel.h"
 
 #include "Hazel/Scene/Components.h"
+#include "Hazel/Renderer/Texture.h"
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
@@ -9,6 +10,8 @@
 #include <glm/gtc/type_ptr.hpp>
 
 namespace Hazel {
+
+    extern const std::filesystem::path g_AssetPath;
 
     SceneHierarchyPanel::SceneHierarchyPanel(const Ref<Scene>& scene)
     {
@@ -69,7 +72,7 @@ namespace Hazel {
         if (ImGui::IsItemClicked())
             m_SelectionContext = entity;
 
-        // ÑÓ³ÙÏú»Ù,ÔÚÃ¿Ö¡µÄ×îºó½øĞĞÏú»Ù
+        // å»¶è¿Ÿé”€æ¯,åœ¨æ¯å¸§çš„æœ€åè¿›è¡Œé”€æ¯
         bool entityDeleted = false;
         if (ImGui::BeginPopupContextItem(0, ImGuiPopupFlags_MouseButtonRight))
         {
@@ -106,7 +109,7 @@ namespace Hazel {
 
         ImGui::PushID(label.c_str());
 
-        // 2ÁĞ labelºÍ¿Ø¼ş
+        // 2åˆ— labelå’Œæ§ä»¶
         ImGui::Columns(2);
         ImGui::SetColumnWidth(0, columnWidth);
         ImGui::Text(label.c_str());
@@ -249,7 +252,7 @@ namespace Hazel {
 
         ImGui::PopItemWidth();
 
-        // Ê¹ÓÃÄ£°åÊµ²ÎÍÆ¶Ï ÍÆ¶Ï³öUIFunctionÀàĞÍ
+        // ä½¿ç”¨æ¨¡æ¿å®å‚æ¨æ–­ æ¨æ–­å‡ºUIFunctionç±»å‹
         DrawComponent<TransformComponent>("Transfrom", entity, [](TransformComponent& component)
         {
             DrawVec3Control("translation", component.Translation);
@@ -322,6 +325,20 @@ namespace Hazel {
         DrawComponent<SpriteRendererComponent>("Sprite Renderer", entity, [](SpriteRendererComponent& component)
         {
             ImGui::ColorEdit4("Color", glm::value_ptr(component.Color));
+
+            ImGui::Button("Texture", ImVec2(100.0f, 0.0f));
+            if (ImGui::BeginDragDropTarget())
+            {
+                if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+                {
+                    const wchar_t* path = (const wchar_t*)payload->Data;
+                    std::filesystem::path texturePath = std::filesystem::path(g_AssetPath) / path;
+                    component.Texture = Texture2D::Create(texturePath.string());
+                }
+                ImGui::EndDragDropTarget();
+            }
+
+            ImGui::DragFloat("Tiling Factor", &component.TilingFactor, 0.1f, 0.0f, 100.0f);
         });
 
     }
