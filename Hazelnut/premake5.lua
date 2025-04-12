@@ -25,6 +25,7 @@ project "Hazelnut"
         "%{wks.location}/Hazel/vendor/spdlog/include",
         "%{wks.location}/Hazel/src",
         "%{wks.location}/Hazel/vendor",
+        "%{IncludeDir.Box2D}",
         "%{IncludeDir.glm}",
         "%{IncludeDir.ImGui}",
         "%{IncludeDir.entt}",

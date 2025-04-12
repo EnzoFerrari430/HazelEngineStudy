@@ -5,6 +5,8 @@
 
 #include "entt/entt.hpp"
 
+class b2World;
+
 namespace Hazel {
 
     class Entity;
@@ -17,6 +19,9 @@ namespace Hazel {
 
         Entity CreateEntity(const std::string& name = std::string());
         void DestroyEntity(Entity entity);
+
+        void OnRuntimeStart();
+        void OnRuntimeStop();
 
         void OnUpdateRuntime(Timestep ts);  // 游戏运行时更新函数
         void OnUpdateEditor(Timestep ts, EditorCamera& camera);   // 编辑状态下更新函数
@@ -32,6 +37,9 @@ namespace Hazel {
         entt::registry m_Registry;
 
         uint32_t m_ViewportWidth = 0, m_ViewportHeight = 0;
+
+        b2World* m_PhysicsWorld = nullptr;
+
         friend class Entity;
         friend class SceneSerializer;
         friend class SceneHierarchyPanel;

@@ -24,6 +24,7 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"  -- debug-window
 -- 引入GLFW的premake5文件
 group "Dependencies"
     include "vendor/premake"
+    include "Hazel/vendor/Box2D"
     include "Hazel/vendor/GLFW"
     include "Hazel/vendor/Glad"
     include "Hazel/vendor/imgui"

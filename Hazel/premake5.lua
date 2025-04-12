@@ -36,6 +36,7 @@ project "Hazel"
     {
         "vendor/spdlog/include",
         "src",
+        "%{IncludeDir.Box2D}",
         "%{IncludeDir.GLFW}",
         "%{IncludeDir.Glad}",
         "%{IncludeDir.ImGui}",
@@ -49,6 +50,7 @@ project "Hazel"
     -- Hazel需要链接的库
     links
     {
+        "Box2D",
         "GLFW",
         "Glad",
         "ImGui",
